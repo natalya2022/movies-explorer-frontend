@@ -1,1 +1,1 @@
-# movies-explorer-frontend
+вариант макета light-3

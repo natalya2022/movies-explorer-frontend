@@ -1,0 +1,120 @@
+.search {
+    padding: 70px 70px 10px 70px;
+}
+
+.search__container {
+    display: flex;
+    height: 72px;
+    margin-bottom: 70px;
+    padding: 0 30px 0 30px;
+    border-radius: 9px;
+    background: #FFF;
+    box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08);
+}
+
+.search__form {
+    display: flex;
+    flex-grow: 1;
+    border: none;
+    align-items: center;
+}
+
+.search__checkbox {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.search__input {
+    flex-grow: 1;
+    border: none;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    padding-left: 34px;
+    background: transparent url('../../images/search.svg') -5px center no-repeat;
+}
+
+.search__input:focus {
+    outline: none;
+    border-bottom: 1px solid #3456F3;
+    ;
+}
+
+.search__input::placeholder {
+    color: #A0A0A0;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.search__vertical-line {
+    padding-right: 30px;
+    height: 40px;
+}
+
+.search__border {
+    width: 100%;
+    border: 1px solid #E8E8E8;
+}
+
+@media screen and (max-width: 768px) {
+    .search {
+        padding: 80px 30px 10px 30px;
+    }
+
+    .search__container {
+        margin-bottom: 110px;
+        padding: 0 20px 0 20px;
+    }
+
+    .search__input {
+        padding-left: 43px;
+        background: transparent url('../../images/search.svg') 5px center no-repeat;
+    }
+
+    .search__vertical-line {
+        padding-right: 19px;
+    }
+
+}
+
+@media screen and (max-width: 670px) {
+    .search__container {
+        display: block;
+        text-align: center;
+        padding-top: 20px;
+        box-sizing: border-box;
+    }
+
+    .search__form {
+        margin: 0 0 53px 0;
+    }
+
+    .search__vertical-line {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .search {
+        padding: 79px 10px 10px 10px;
+    }
+
+    .search__input {
+        padding-left: 0;
+        padding-bottom: 6px;
+        background: none;
+    }
+
+    .search__input::placeholder {
+        font-size: 14px;
+    }
+
+    .search__checkbox {
+        padding-left: 20px;
+        padding-bottom: 5px;
+    }
+}

@@ -1,0 +1,138 @@
+.header {
+    min-height: 74px;
+    margin: 0 auto;
+    padding: 0 70px 0;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    justify-content: space-between;
+    column-gap: 45px;
+}
+
+.header_theme-gray {
+    background: #DDDEE3;
+}
+
+.header__link {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: black;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.header__link_dark {
+    font-weight: 500;
+}
+
+.header__link:hover {
+    opacity: .7;
+}
+
+.header__navbar {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__avtorised {
+    display: flex;
+    column-gap: 16px;
+}
+
+.header__acc {
+    display: block;
+    width: 100px;
+    height: 32px;
+    background: transparent url('../../images/profile.svg') center no-repeat;
+    background-size: 100px 32px;
+    border: none;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.header__acc:hover {
+    opacity: .8;
+}
+
+.header__login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 32px;
+    background-color: #3456F3;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.header__login:hover {
+    opacity: .8;
+}
+
+.header__unavtorised {
+    display: flex;
+    column-gap: 30px;
+    align-items: center;
+}
+
+.header__link_unavtorised {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: black;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.header__link_unavtorised:hover {
+    opacity: .7;
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 0 30px 0;
+    }
+
+    .header__link {
+        display: none;
+    }
+
+    .header__acc {
+        display: none;
+    }
+
+}
+
+@media screen and (max-width: 420px) {
+    .header {
+        padding: 0 14px 0;
+    }
+
+    .header__login {
+        font-size: 10px;
+        width: 54px;
+        height: 26px;
+    }
+
+    .header__unavtorised {
+        column-gap: 14px;
+    }
+
+    .header__link_unavtorised {
+        font-size: 10px;
+    }
+}

@@ -11,12 +11,12 @@ const Navigation = ({ isOpen, toggleMenu }) => {
         <div className={`menu ${isOpen ? 'menu_opened' : ''}`}>
             <div className="menu__wrap">
                 <div className="menu__container">
-                    <ButtonUniversal className={"button-menu"} onClick={toggleMenu} />
-                    <div className="menu__links">
+                    <ButtonUniversal className={"button-menu"} onClick={toggleMenu} type={"button"}/>
+                    <nav className="menu__links">
                         <Link to="/" className={`menu__link ${location.pathname === "/" ? 'menu__link_active' : ''}`} onClick={toggleMenu}>Главная</Link>
                         <Link to="/movies" className={`menu__link ${location.pathname === "/movies" ? 'menu__link_active' : ''}`} onClick={toggleMenu} >Фильмы</Link>
                         <Link to="/saved-movies" className={`menu__link ${location.pathname === "/saved-movies" ? 'menu__link_active' : ''}`} onClick={toggleMenu}>Сохранённые фильмы</Link>
-                    </div>
+                    </nav>
                     <Link to="/profile" className="menu__acc" onClick={toggleMenu}></Link>
                 </div>
             </div>

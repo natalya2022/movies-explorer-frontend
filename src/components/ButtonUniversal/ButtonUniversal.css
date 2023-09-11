@@ -7,6 +7,7 @@
     border: none;
     margin: 0;
     padding: 0;
+    cursor: pointer;
     outline: none;
     transition: opacity 0.3s;
 }
@@ -70,6 +71,11 @@
     outline: none;
     cursor: pointer;
     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s;
+}
+
+.button-selectmovies:hover {
+    opacity: .8;
 }
 
 .button-selectmovies_color {

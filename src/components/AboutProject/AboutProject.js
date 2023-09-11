@@ -15,7 +15,7 @@ export const AboutProject = () => {
                     <p className="aboutproject__text">У каждого этапа был мягкий и жёсткий дедлайн, которые нужно было соблюдать, чтобы успешно защититься.</p>
                 </article>
             </div>
-            <div className="aboutproject__bar">
+            <article className="aboutproject__bar">
                 <div className="aboutproject__design-column">
                     <div className="aboutproject__blue-element">1 неделя</div>
                     <div className="aboutproject__text-element">Back-end</div>    
@@ -24,7 +24,7 @@ export const AboutProject = () => {
                     <div className="aboutproject__grey-element">4 недели</div>
                     <div className="aboutproject__text-element">Front-end</div>
                 </div>
-            </div>
+            </article>
         </section>
     )
 }

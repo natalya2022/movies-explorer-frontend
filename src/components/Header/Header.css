@@ -1,4 +1,5 @@
 .header {
+    width: 100%;
     min-height: 74px;
     margin: 0 auto;
     padding: 0 70px 0;
@@ -89,7 +90,7 @@
     align-items: center;
 }
 
-.header__link_unavtorised {
+.header__link-unavtorised {
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;

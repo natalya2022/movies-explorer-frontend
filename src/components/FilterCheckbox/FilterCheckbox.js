@@ -7,7 +7,7 @@ const FilterCheckbox = () => {
 
     return (
         <div className="checkbox">
-            <div class="checkbox__button checkbox__button_on" onClick={checkSwitch}></div>
+            <div className="checkbox__button checkbox__button_on" onClick={checkSwitch}></div>
             <p className="checkbox__text">Короткометражки</p>
         </div>
     )

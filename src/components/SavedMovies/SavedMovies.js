@@ -6,14 +6,14 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
 const SavedMovies = ({ toggleMenu, loggedIn }) => {
   return (
-    <>
-    <Header toggleMenu={toggleMenu} loggedIn={loggedIn} />
-    <main className="saved-movies">
+    <div className="page-wrap">
+      <Header toggleMenu={toggleMenu} loggedIn={loggedIn} />
+      <main className="saved-movies">
         <SearchForm />
         <MoviesCardList />
-    </main>
-    <Footer />
-</>
+      </main>
+      <Footer />
+    </div>
   )
 }
 

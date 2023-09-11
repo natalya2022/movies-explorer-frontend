@@ -81,7 +81,7 @@
     transition: opacity 0.3s;
 }
 
-.login__login:hover {
+.login__register:hover {
     opacity: .7;
 }
 
@@ -109,7 +109,7 @@
     }
 
     .login__nav {
-        padding-top: 309px;
+        padding-top: 310px;
         row-gap: 14px;
     }
 

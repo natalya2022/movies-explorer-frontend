@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ButtonUniversal = (props) => {
+const ButtonUniversal = (props) => {  
    
   // функция для проверки работы кнопок в макете
   const checkButton = (evt) => evt.target.classList.toggle(props.classNameActive);

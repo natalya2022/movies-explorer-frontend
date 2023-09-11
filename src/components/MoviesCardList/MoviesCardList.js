@@ -32,7 +32,7 @@ const MoviesCardList = () => {
             <MoviesCard />
           </ul>
           <div className="movies-grid__more">
-            <ButtonUniversal className={"button-more"} buttonText={"Еще"} />
+            <ButtonUniversal className={"button-more"} buttonText={"Еще"} type={"button"} />
           </div>
         </>
         :
@@ -40,10 +40,10 @@ const MoviesCardList = () => {
           <ul className="movies-grid__places">
             <MoviesCard />
             <MoviesCard />
-            <MoviesCard />        
+            <MoviesCard />
           </ul>
           <div className="movies-grid__more">
-            <ButtonUniversal className={"button-more button-more_hidden"} buttonText={"Еще"} />
+            <ButtonUniversal className={"button-more button-more_hidden"} buttonText={"Еще"} type={"button"} />
           </div>
         </>
       }

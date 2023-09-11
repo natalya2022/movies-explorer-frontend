@@ -7,14 +7,14 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
 const Movies = ({ toggleMenu, loggedIn }) => {
     return (
-        <>
+        <div className="page-wrap">
             <Header toggleMenu={toggleMenu} loggedIn={loggedIn} />
             <main className="movies">
                 <SearchForm />
                 <MoviesCardList />
             </main>
             <Footer />
-        </>
+        </div>
     )
 }
 

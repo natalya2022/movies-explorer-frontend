@@ -5,10 +5,10 @@ const Techs = () => {
     return (
         <section className="techs">
             <MainTitle text={"Технологии"} id={"technology"} />
-            <article className="techs__article">
+            <div className="techs__article">
                 <h3 className="techs__subtitle">7 технологий</h3>
                 <p className="techs__text">На курсе веб-разработки мы освоили технологии, которые применили в дипломном проекте.</p>
-            </article>
+            </div>
             <ul className="techs__list">
                 <li className="techs__list-item">HTML</li>
                 <li className="techs__list-item">CSS</li>

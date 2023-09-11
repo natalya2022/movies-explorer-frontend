@@ -23,8 +23,8 @@ const MoviesCard = () => {
                     <p className="movies-grid__duration">1ч42м</p>
                 </div>
                 {location.pathname === '/movies' ?
-                    <ButtonUniversal className={"button-selectmovies"} classNameActive={"button-selectmovies_color"} />
-                    : <ButtonUniversal className={"button-deletemovies"} />
+                    <ButtonUniversal className={"button-selectmovies"} classNameActive={"button-selectmovies_color"} type={"button"} />
+                    : <ButtonUniversal className={"button-deletemovies"} type={"button"} />
                 }
             </div>
         </li>

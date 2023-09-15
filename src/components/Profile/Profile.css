@@ -1,0 +1,125 @@
+.profile {
+    margin: 0 auto;
+    padding-top: 57px;
+}
+
+.profile__title {
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 106px;
+}
+
+.profile__form {
+    margin: 0 auto;
+    max-width: 410px;
+
+}
+
+.profile__fill {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 17px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid transparent;
+}
+
+.profile__fill:first-child {
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.profile__label {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    height: 18px;
+}
+
+.profile__input {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    height: 15px;
+    border: none;
+    text-align: right;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    background: #FAFAFA;
+}
+
+.profile__input:focus {
+    outline: none;
+    font-weight: 500;
+}
+
+/* .profile__input:invalid {
+    color: #EE3465;
+} */
+
+.profile__nav {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    align-items: center;
+    padding-top: 204px;
+    box-sizing: border-box;
+}
+
+.profile__logout {
+    display: block;
+    color: #EE3465;
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.profile__logout:hover {
+    opacity: .7;
+}
+
+@media screen and (max-width: 768px) {
+    .profile {
+        padding-top: 220px;
+    }
+
+    .profile__title {
+        margin-bottom: 79px;
+    }
+
+    .profile__nav {
+        padding-top: 194px;
+    }
+}
+
+@media screen and (max-width: 470px) {
+    .profile {
+        padding: 54px 30px 0 30px;
+    }
+
+    .profile__title {
+        margin-bottom: 63px;
+    }
+
+    .profile__form {
+        width: 100%;
+        padding-bottom: 375px;
+    }
+
+    .profile__logout {
+        font-size: 12px;
+    }
+
+    .profile__nav {
+        row-gap: 18px;
+        padding-top: 363px;
+    }
+}

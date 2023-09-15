@@ -14,7 +14,7 @@
 }
 
 .register__fill {
-    margin-top: 24px;
+    /* margin-top: 24px; */
     display: flex;
     flex-direction: column;
     row-gap: 4px;
@@ -31,7 +31,7 @@
 .register__input {
     width: 100%;
     margin: 0;
-    padding: 0 0 11px 0;
+    padding: 0 0 10px 0;
     border: none;
     font-size: 14px;
     font-style: normal;
@@ -47,12 +47,17 @@
     border-bottom: 1px solid #3456F3;
 }
 
-/* .register__input:invalid {
+.register__input_error.register__input:focus {
+    border-bottom: 1px solid #EE3465;
     color: #EE3465;
-} */
+}
+
+.register__input_error {
+    color: #EE3465;
+}
 
 .register__nav {
-    padding-top: 152px;
+    padding-top: 128px;
     display: flex;
     flex-direction: column;
     row-gap: 17px;
@@ -85,6 +90,19 @@
     opacity: .7;
 }
 
+.regauto__error-visible {
+    color: #EE3465;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    display: inline-block;
+    height: 20px;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+}
+
 @media screen and (max-width: 768px) {
     .register {
         padding: 232px 0 232px 0;
@@ -105,11 +123,11 @@
     }
 
     .register__title {
-        margin: 50px 0 55px 0;
+        margin: 50px 0 80px 0;
     }
 
     .register__nav {
-        padding-top: 241px;
+        padding-top: 217px;
     }
 
     .register__text {
@@ -122,5 +140,9 @@
 
     .register__nav {
         row-gap: 14px;
+    }
+
+    .regauto__error_visible {
+        height: 23px;
     }
 }

@@ -1,10 +1,11 @@
 export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.movieinfo.nomoredomainsicu.ru' : 'http://localhost:3000';
 
-function checkRequest(res) {
+async function checkRequest(res) {
     if (res.ok) {
         return res.json();
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    // return Promise.reject(`Ошибка: ${res.status}. ${(await res.json()).message }`);
+    return Promise.reject({ status: `Ошибка: ${res.status}`, message: `${(await res.json()).message }` });
 }
 
 // регистрация пользователя

@@ -4,16 +4,19 @@ import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 
-const Register = ({ onAddUser, isSending }) => {
-
+const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
 
-  useEffect(() => {       
-    resetForm({}, {}, false);    
+  useEffect(() => {
+    resetErrors();
+  }, []);
+
+  useEffect(() => {
+    resetForm({}, {}, false);
   }, [resetForm]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();    
+  const handleSubmit = e => {
+    e.preventDefault();
     onAddUser(values.name, values.email, values.password);
   };
 
@@ -31,7 +34,9 @@ const Register = ({ onAddUser, isSending }) => {
             </label>
             <input
               type="text"
-              className={`register__email register__input ${errors.name ? 'register__input_error' : ''}`}
+              className={`register__email register__input ${
+                errors.name ? 'register__input_error' : ''
+              }`}
               id="form-register-name"
               placeholder="Виталий"
               size="10"
@@ -41,17 +46,19 @@ const Register = ({ onAddUser, isSending }) => {
               maxLength={30}
               autoFocus
               onChange={handleChange}
-              value={values.name}             
+              value={values.name}
             />
           </div>
-             <span className="form-register-error regauto__error-visible">{errors.name || ""}</span>
+          <span className="form-register-error regauto__error-visible">{errors.name || ''}</span>
           <div className="register__fill">
             <label className="register__label" htmlFor="form-register-email">
               E-mail
             </label>
             <input
               type="email"
-              className={`register__email register__input ${errors.email ? 'register__input_error' : ''}`}
+              className={`register__email register__input ${
+                errors.email ? 'register__input_error' : ''
+              }`}
               id="form-register-email"
               placeholder="pochta@yandex.ru"
               size="10"
@@ -60,7 +67,7 @@ const Register = ({ onAddUser, isSending }) => {
               onChange={handleChange}
               value={values.email}
             />
-            <span className="form-register-error regauto__error-visible">{errors.email || ""}</span>
+            <span className="form-register-error regauto__error-visible">{errors.email || ''}</span>
           </div>
           <div className="register__fill">
             <label className="register__label" htmlFor="form-register-pass">
@@ -68,7 +75,9 @@ const Register = ({ onAddUser, isSending }) => {
             </label>
             <input
               type="password"
-              className={`register__email register__input ${errors.password ? 'register__input_error' : ''}`}
+              className={`register__email register__input ${
+                errors.password ? 'register__input_error' : ''
+              }`}
               id="form-register-pass"
               size="10"
               minLength={8}
@@ -80,13 +89,20 @@ const Register = ({ onAddUser, isSending }) => {
               value={values.password}
             />
           </div>
-          <span className="form-register-error regauto__error-visible">{errors.password || ""}</span>
+          <span className="form-register-error regauto__error-visible">
+            {errors.password || ''}
+          </span>
           <div className="register__nav">
+            <span className="profile__error profile__error_visible regauto__error-visible">
+              {userError.error || ''}
+            </span>
             <ButtonUniversal
-              className={`button-reg-login ${(!isValid || isSending) ? 'button-reg-login_disabled' : ''}`}
+              className={`button-reg-login ${
+                !isValid || isSending ? 'button-reg-login_disabled' : ''
+              }`}
               buttonText={isSending ? 'Регистрация...' : 'Зарегистрироваться'}
               type={'submit'}
-              disabled={!isValid || isSending}              
+              disabled={!isValid || isSending}
             />
             <p className="register__text">
               Уже зарегистрированы?&nbsp;

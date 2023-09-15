@@ -25,12 +25,13 @@ function App() {
   const [isUserSending, setIsUserSending] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [toooltipMessage, setToooltipMessage] = useState({ link: '', text: '' });
+  const [isUserError, setIsUserError] = useState({ error: '' });
 
   const navigate = useNavigate();
 
   const toolMessage = { ok: 0, err: 1 };
   const toolMessages = [
-    { link: regtrue, text: 'Вы успешно зарегистрировались!' },
+    { link: regtrue, text: 'Данные профиля изменены!' },
     { link: iconinfo, text: 'Что-то пошло не так! Попробуйте еще раз.' }
   ];
 
@@ -62,6 +63,11 @@ function App() {
     setIsInfoTooltipOpen(false);
   };
 
+  // функция сброса ошибок
+  function resetErrors() {
+    setIsUserError({ error: '' });
+  }
+
   // функция регистрации нового пользователя
   function handleNewUserReg(name, email, password) {
     setIsRegisterSending(true);
@@ -91,9 +97,8 @@ function App() {
         navigate('/movies');
       })
       .catch(err => {
-        console.error(err);
-        setToooltipMessage(toolMessages[toolMessage.err]);
-        handleInfoTooltipOpen();
+        console.error(err.status);
+        setIsUserError({ error: err.message });
       })
       .finally(() => setIsLoginSending(false));
   }
@@ -139,8 +144,13 @@ function App() {
       .editUserProfile(name, email)
       .then(userData => {
         setCurrentUser(userData);
+        handleInfoTooltipOpen();
+        setToooltipMessage(toolMessages[toolMessage.ok]);
       })
-      .catch(console.error)
+      .catch(err => {
+        console.error(err.status);
+        setIsUserError({ error: err.message });
+      })
       .finally(() => setIsUserSending(false));
   }
 
@@ -167,12 +177,21 @@ function App() {
                   loggedIn={isLoggedIn}
                   userLogOut={userLogOut}
                   isSending={isUserSending}
+                  userError={isUserError}
+                  resetErrors={resetErrors}
                 />
               }
             />
             <Route
               path="/signup"
-              element={<Register onAddUser={handleNewUserReg} isSending={isRegisterSending} />}
+              element={
+                <Register
+                  onAddUser={handleNewUserReg}
+                  isSending={isRegisterSending}
+                  userError={isUserError}
+                  resetErrors={resetErrors}
+                />
+              }
             />
             <Route
               path="/signin"
@@ -181,6 +200,8 @@ function App() {
                   onUserLogin={handleUserLogin}
                   isSending={isLoginSending}
                   onUserLogOut={userLogOut}
+                  userError={isUserError}
+                  resetErrors={resetErrors}
                 />
               }
             />

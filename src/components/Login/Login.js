@@ -4,8 +4,12 @@ import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 
-const Login = ({ onUserLogin, isSending }) => {
+const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
+ 
+ useEffect(() => {
+    resetErrors();
+  }, []);
 
   useEffect(() => {
     resetForm({}, {}, false);
@@ -62,6 +66,7 @@ const Login = ({ onUserLogin, isSending }) => {
           </div>
           <span className="form-login-error regauto__error-visible">{errors.password || ''}</span>
           <div className="login__nav">
+          <span className="profile__error profile__error_visible regauto__error-visible">{userError.error || ''}</span>
             <ButtonUniversal
               className={`button-reg-login ${
                 !isValid || isSending ? 'button-reg-login_disabled' : ''

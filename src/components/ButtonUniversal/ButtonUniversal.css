@@ -118,7 +118,7 @@
     opacity: .8;
 }
 
-.button-profile {
+/* .button-profile {
     display: block;
     border: none;
     padding: 0;
@@ -135,9 +135,9 @@
 
 .button-profile:hover {
     opacity: .8;
-}
+} */
 
-.button-reg-login {
+/* .button-reg-login {
     display: block;
     border: none;
     padding: 0;
@@ -164,7 +164,7 @@
 .button-reg-login_disabled {
     background: #F8F8F8;
     color: #C2C2C2;
-}
+} */
 
 @media screen and (max-width: 768px) {
     .button-burger {
@@ -194,11 +194,11 @@
         right: 18px;
     }
 
-    .button-profile {
+    /* .button-profile {
         font-size: 12px;
     }
 
     .button-reg-login {
         font-size: 12px;
-    }
+    } */
 }

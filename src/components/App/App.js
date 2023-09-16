@@ -26,6 +26,7 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [toooltipMessage, setToooltipMessage] = useState({ link: '', text: '' });
   const [isUserError, setIsUserError] = useState({ error: '' });
+  const [isEditableProfile, setIsEditableProfile] = useState(false);
 
   const navigate = useNavigate();
 
@@ -63,6 +64,12 @@ function App() {
     setIsInfoTooltipOpen(false);
   };
 
+  // функция включения выключения редактирования профиля
+  function handleUserProfileEdit(editFlag) {
+    setIsEditableProfile(editFlag);
+    resetErrors();
+  }
+
   // функция сброса ошибок
   function resetErrors() {
     setIsUserError({ error: '' });
@@ -74,12 +81,16 @@ function App() {
     api
       .register(name, email, password)
       .then(res => {
-        setCurrentUser(res);       
+        setCurrentUser(res);
         handleUserLogin(res.email, password);
       })
       .catch(err => {
         console.error(err.status);
-        setIsUserError({ error: err.message });
+        if (err.message === 'Validation failed') {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
+        } else {
+          setIsUserError({ error: err.message });
+        }
       })
       .finally(() => setIsRegisterSending(false));
   }
@@ -95,7 +106,11 @@ function App() {
       })
       .catch(err => {
         console.error(err.status);
-        setIsUserError({ error: err.message });
+        if (err.message === 'Validation failed') {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
+        } else {
+          setIsUserError({ error: err.message });
+        }
       })
       .finally(() => setIsLoginSending(false));
   }
@@ -143,10 +158,16 @@ function App() {
         setCurrentUser(userData);
         handleInfoTooltipOpen();
         setToooltipMessage(toolMessages[toolMessage.ok]);
+        setIsEditableProfile(false);
+        resetErrors();
       })
       .catch(err => {
         console.error(err.status);
-        setIsUserError({ error: err.message });
+        if (err.message === 'Validation failed') {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
+        } else {
+          setIsUserError({ error: err.message });
+        }
       })
       .finally(() => setIsUserSending(false));
   }
@@ -176,6 +197,8 @@ function App() {
                   isSending={isUserSending}
                   userError={isUserError}
                   resetErrors={resetErrors}
+                  editableProfile={isEditableProfile}
+                  editProfile={handleUserProfileEdit}
                 />
               }
             />

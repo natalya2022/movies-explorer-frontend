@@ -1,18 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import Logo from '../Logo/Logo';
-import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { regexpEmail } from '../../utils/regex';
 
 const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
- 
- useEffect(() => {
-    resetErrors();
-  }, []);
 
   useEffect(() => {
+    resetErrors();
     resetForm({}, {}, false);
   }, [resetForm]);
 
@@ -39,12 +36,13 @@ const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
               className={`login__email login__input ${errors.email ? 'login__input_error' : ''}`}
               id="form-login-email"
               name="email"
-              placeholder="pochta@yandex.ru"
+              placeholder="Ваш email"
               size="10"
+              pattern={regexpEmail}
               required
               autoFocus
               onChange={handleChange}
-              value={values.email}
+              value={values.email || ''}
             />
           </div>
           <span className="form-login-error regauto__error-visible">{errors.email || ''}</span>
@@ -61,22 +59,21 @@ const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
               minLength={8}
               maxLength={30}
               name="password"
-              placeholder="•••••"
+              placeholder="Ваш пароль"
               onChange={handleChange}
-              value={values.password}
+              value={values.password || ''}
             />
           </div>
           <span className="form-login-error regauto__error-visible">{errors.password || ''}</span>
           <div className="login__nav">
-          <span className="profile__error profile__error_visible regauto__error-visible">{userError.error || ''}</span>
-            <ButtonUniversal
-              className={`button-reg-login ${
-                !isValid || isSending ? 'button-reg-login_disabled' : ''
-              }`}
-              buttonText={isSending ? 'Авторизация...' : 'Войти'}
-              type={'submit'}
+            <span className="login__error login__error_visible">{userError.error || ''}</span>
+            <button
+              className={`login__button ${!isValid || isSending ? 'login__button_disabled' : ''}`}
+              type="submit"
               disabled={!isValid || isSending}
-            />
+            >
+              {isSending ? 'Авторизация...' : 'Войти'}
+            </button>
             <p className="login__text">
               Еще не зарегистрированы?&nbsp;
               <Link to="/signup" className="login__register">

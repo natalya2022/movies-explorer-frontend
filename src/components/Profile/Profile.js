@@ -1,31 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import Header from '../Header/Header';
-import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { regexpEmail } from '../../utils/regex';
 
-const Profile = ({ toggleMenu, loggedIn, userLogOut, onUpdateUser, isSending, userError, resetErrors }) => {
-
+const Profile = ({
+  toggleMenu,
+  loggedIn,
+  userLogOut,
+  onUpdateUser,
+  isSending,
+  userError,
+  resetErrors,
+  editableProfile,
+  editProfile
+}) => {
   const currentUser = useContext(CurrentUserContext);
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
-  const [isEditable, setIsEditable] = useState(false);
+
+  const invalidButton =
+    !isValid ||
+    isSending ||
+    (currentUser.name === values.name && currentUser.email === values.email);
 
   useEffect(() => {
+    editProfile(false);
     resetErrors();
-  }, []);
-
-  function editable() {
-    setIsEditable(true);
-    resetErrors();
-    console.log('Редактирование');
-    // document.getElementById('form-update-name').focus();
-  }
-
-  const invalidButton = !isValid || isSending || (currentUser.name === values.name && currentUser.email === values.email);
-
-  useEffect(() => {
     resetForm({ name: currentUser.name, email: currentUser.email }, {}, false);
   }, [resetForm, currentUser.name, currentUser.email]);
 
@@ -34,7 +36,6 @@ const Profile = ({ toggleMenu, loggedIn, userLogOut, onUpdateUser, isSending, us
     if (invalidButton) {
       return;
     }
-    setIsEditable(false);
     onUpdateUser({ name: values.name, email: values.email });
   };
 
@@ -57,7 +58,8 @@ const Profile = ({ toggleMenu, loggedIn, userLogOut, onUpdateUser, isSending, us
                 minLength={2}
                 maxLength={30}
                 name="name"
-                disabled={!isEditable}
+                required
+                disabled={!editableProfile}
                 onChange={handleChange}
                 value={values.name || ''}
               />
@@ -73,34 +75,39 @@ const Profile = ({ toggleMenu, loggedIn, userLogOut, onUpdateUser, isSending, us
                 id="form-update-email"
                 placeholder="Ваш email"
                 name="email"
-                disabled={!isEditable}
+                pattern={regexpEmail}
+                required
+                disabled={!editableProfile}
                 onChange={handleChange}
                 value={values.email || ''}
               />
             </div>
             <span className="form-update-error regauto__error-visible">{errors.email || ''}</span>
             <div className="profile__nav">
-              <span className="profile__error profile__error_visible regauto__error-visible">{userError.error || ''}</span>
-              {!isEditable ? (
-                <>
-                  <ButtonUniversal
-                    className={'button-profile'}
-                    buttonText={'Редактировать'}
-                    type={'button'}
-                    onClick={editable}
-                  />
+              <span className="profile__error profile__error_visible">{userError.error || ''}</span>
+              {!editableProfile ? (
+                <>                
+                  <button
+                    className="profile__button-edit"
+                    type="button"
+                    onClick={() => {
+                      editProfile(true);
+                    }}
+                  >
+                    Редактировать
+                  </button>
                   <Link to="/" className="profile__logout" onClick={userLogOut}>
                     Выйти из аккаунта
                   </Link>
                 </>
-              ) : (
-                <ButtonUniversal
-                  className={`button-reg-login ${invalidButton ? 'button-reg-login_disabled' : ''}`}
-                  buttonText={isSending ? 'Сохранение...' : 'Сохранить'}
-                  type={'submit'}
-                  onClick={console.log('Сохраняем')}
+              ) : (              
+                <button
+                  className={`profile__button ${invalidButton ? 'profile__button_disabled' : ''}`}
+                  type="submit"
                   disabled={invalidButton}
-                />
+                >
+                  {isSending ? 'Сохранение...' : 'Сохранить'}
+                </button>
               )}
             </div>
           </form>

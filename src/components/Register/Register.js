@@ -1,18 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import Logo from '../Logo/Logo';
-import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { regexpEmail } from '../../utils/regex';
 
 const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
 
   useEffect(() => {
     resetErrors();
-  }, []);
-
-  useEffect(() => {
     resetForm({}, {}, false);
   }, [resetForm]);
 
@@ -40,7 +37,7 @@ const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
                 errors.name ? 'register__input_error' : ''
               }`}
               id="form-register-name"
-              placeholder="Виталий"
+              placeholder="Ваше имя"
               size="10"
               name="name"
               required
@@ -48,7 +45,7 @@ const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
               maxLength={30}
               autoFocus
               onChange={handleChange}
-              value={values.name}
+              value={values.name || ''}
             />
           </div>
           <span className="form-register-error regauto__error-visible">{errors.name || ''}</span>
@@ -62,12 +59,13 @@ const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
                 errors.email ? 'register__input_error' : ''
               }`}
               id="form-register-email"
-              placeholder="pochta@yandex.ru"
+              placeholder="Ваш email"
               size="10"
               name="email"
+              pattern={regexpEmail}
               required
               onChange={handleChange}
-              value={values.email}
+              value={values.email || ''}
             />
             <span className="form-register-error regauto__error-visible">{errors.email || ''}</span>
           </div>
@@ -86,26 +84,25 @@ const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
               maxLength={30}
               required
               name="password"
-              placeholder="•••••"
+              placeholder="Ваш пароль"
               onChange={handleChange}
-              value={values.password}
+              value={values.password || ''} 
             />
           </div>
           <span className="form-register-error regauto__error-visible">
             {errors.password || ''}
           </span>
           <div className="register__nav">
-            <span className="profile__error profile__error_visible regauto__error-visible">
-              {userError.error || ''}
-            </span>
-            <ButtonUniversal
-              className={`button-reg-login ${
-                !isValid || isSending ? 'button-reg-login_disabled' : ''
+            <span className="register__error register__error_visible">{userError.error || ''}</span>
+            <button
+              className={`register__button ${
+                !isValid || isSending ? 'register__button_disabled' : ''
               }`}
-              buttonText={isSending ? 'Регистрация...' : 'Зарегистрироваться'}
-              type={'submit'}
+              type="submit"
               disabled={!isValid || isSending}
-            />
+            >
+              {isSending ? 'Регистрация...' : 'Зарегистрироваться'}
+            </button>
             <p className="register__text">
               Уже зарегистрированы?&nbsp;
               <Link to="/signin" className="register__login">

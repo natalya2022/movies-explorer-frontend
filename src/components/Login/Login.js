@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import Logo from '../Logo/Logo';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
@@ -17,6 +18,7 @@ const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    resetErrors();
     onUserLogin(values.email, values.password);
   };
 

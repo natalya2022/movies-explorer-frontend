@@ -74,15 +74,12 @@ function App() {
     api
       .register(name, email, password)
       .then(res => {
-        setCurrentUser(res);
-        handleInfoTooltipOpen();
-        setToooltipMessage(toolMessages[toolMessage.ok]);
+        setCurrentUser(res);       
         handleUserLogin(res.email, password);
       })
       .catch(err => {
-        console.error(err);
-        setToooltipMessage(toolMessages[toolMessage.err]);
-        handleInfoTooltipOpen();
+        console.error(err.status);
+        setIsUserError({ error: err.message });
       })
       .finally(() => setIsRegisterSending(false));
   }

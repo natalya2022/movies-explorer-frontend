@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
-import { regexpEmail } from '../../utils/regex';
+import { REGEXP_EMAIL } from '../../utils/regex';
 
 const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
@@ -38,7 +38,7 @@ const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
               name="email"
               placeholder="Ваш email"
               size="10"
-              pattern={regexpEmail}
+              pattern={REGEXP_EMAIL}
               required
               autoFocus
               onChange={handleChange}

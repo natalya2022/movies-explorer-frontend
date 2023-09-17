@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
-import { regexpEmail } from '../../utils/regex';
+import { REGEXP_EMAIL } from '../../utils/regex';
 
 const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
   const { values, handleChange, resetForm, errors, isValid } = useFormValidation();
@@ -62,7 +62,7 @@ const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
               placeholder="Ваш email"
               size="10"
               name="email"
-              pattern={regexpEmail}
+              pattern={REGEXP_EMAIL}
               required
               onChange={handleChange}
               value={values.email || ''}

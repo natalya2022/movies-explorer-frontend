@@ -4,7 +4,7 @@ import { CurrentUserContext } from '../../context/CurrentUserContext';
 import Header from '../Header/Header';
 import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
-import { regexpEmail } from '../../utils/regex';
+import { REGEXP_EMAIL } from '../../utils/regex';
 
 const Profile = ({
   toggleMenu,
@@ -75,7 +75,7 @@ const Profile = ({
                 id="form-update-email"
                 placeholder="Ваш email"
                 name="email"
-                pattern={regexpEmail}
+                pattern={REGEXP_EMAIL}
                 required
                 disabled={!editableProfile}
                 onChange={handleChange}

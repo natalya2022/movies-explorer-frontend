@@ -1,4 +1,4 @@
-export const regexpEmail = "\\w+@\\w+\\.\\w+";
+export const REGEXP_EMAIL = "\\w+@\\w+\\.\\w+";
 
 // export const regexpEmail = '\\S+@\\S+\\.\\S+';
 

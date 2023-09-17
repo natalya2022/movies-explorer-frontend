@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { BASE_URL } from '../../utils/constants';
 
-const MoviesCard = ({ moviesCard }) => {
+const MoviesCard = ({ moviesCard, index }) => {
   // переменная изменения вида кнопки "избранное"
   const location = useLocation();
 
@@ -33,7 +33,7 @@ const MoviesCard = ({ moviesCard }) => {
       <div className="movies-grid__rectangle">
         <div className="movies-grid__info">
           <h2 className="movies-grid__title">{moviesCard.nameRU}</h2>
-          <p className="movies-grid__duration">{durationFormat()}</p>
+          <p className="movies-grid__duration">{index}) {durationFormat()}</p>
         </div>
         {location.pathname === '/movies' ? (
           <ButtonUniversal

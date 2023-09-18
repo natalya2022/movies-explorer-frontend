@@ -250,28 +250,6 @@ function App() {
       .catch(console.error);
   }
 
-  // function handleSaveMovie(movie, likeMovie = 0) {
-  //   console.log(movie, likeMovie);
-  //   if (likeMovie) {
-  //     // дизлайкаем == удаляем из сохранённых
-  //     api
-  //       .deleteMovie(likeMovie)
-  //       .then(() => {
-  //         setSavedMovies(movie => movie.filter(c => c._id !== likeMovie));
-  //       })
-  //       .catch(console.error);
-  //   } else {
-  //     // лайкаем == добавляем в сохранённые
-  //     api
-  //       .saveMovie(movie)
-  //       .then(newMovie => {
-  //         setSavedMovies([...savedMovies, newMovie]);
-  //         console.log(savedMovies);
-  //       })
-  //       .catch(console.error);
-  //   }
-  // }
-
   // функция перeключения короткометражек
   function handleShortsToggle() {
     setFilterParameters({ ...filterParameters, shorts: !filterParameters.shorts });

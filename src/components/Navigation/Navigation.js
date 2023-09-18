@@ -11,7 +11,7 @@ const Navigation = ({ isOpen, toggleMenu }) => {
         <div className={`menu ${isOpen ? 'menu_opened' : ''}`}>
             <div className="menu__wrap">
                 <div className="menu__container">
-                    <ButtonUniversal className={"button-menu"} onClick={toggleMenu} type={"button"}/>
+                    <ButtonUniversal className={"button-menu"} onClick={toggleMenu} type={"button"} />
                     <nav className="menu__links">
                         <Link to="/" className={`menu__link ${location.pathname === "/" ? 'menu__link_active' : ''}`} onClick={toggleMenu}>Главная</Link>
                         <Link to="/movies" className={`menu__link ${location.pathname === "/movies" ? 'menu__link_active' : ''}`} onClick={toggleMenu} >Фильмы</Link>

@@ -86,7 +86,7 @@ const Profile = ({
             <div className="profile__nav">
               <span className="profile__error profile__error_visible">{userError.error || ''}</span>
               {!editableProfile ? (
-                <>                
+                <>
                   <button
                     className="profile__button-edit"
                     type="button"
@@ -100,7 +100,7 @@ const Profile = ({
                     Выйти из аккаунта
                   </Link>
                 </>
-              ) : (              
+              ) : (
                 <button
                   className={`profile__button ${invalidButton ? 'profile__button_disabled' : ''}`}
                   type="submit"

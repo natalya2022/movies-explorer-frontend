@@ -2,13 +2,7 @@ import React from 'react';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 
-const SearchForm = ({
-  filterShorts,
-  toggleShorts,
-  filterMovies,
-  searchChange,
-  searchString
-}) => {
+const SearchForm = ({ filterShorts, toggleShorts, filterMovies, searchChange, searchString }) => {
   console.log(filterShorts, searchString);
 
   return (

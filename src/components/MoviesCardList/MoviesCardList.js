@@ -9,7 +9,7 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
   console.log('**', moviesCards);
 
   // навешивет слушатель, который при изменении разрешения
-  // вызывает функцию пересчета кол-ва карточек 
+  // вызывает функцию пересчета кол-ва карточек
   // расчет содержится в массиве countSelectorArray
   // текущие параметры добавления: при изменении экран
   // показывает количество карт как при первоначальной загрузке
@@ -51,7 +51,7 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
               return index < countMovies ? (
                 <MoviesCard
                   moviesCard={moviesCard}
-                  key={moviesCard.id}                 
+                  key={moviesCard.id}
                   likeMovie={likeMovie}
                   savedMovies={savedMovies}
                 />
@@ -78,10 +78,10 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
           <ul className="movies-grid__places">
             {moviesCards.map((moviesCard, index) => {
               return (
-                <MoviesCard                  
-                  key={moviesCard._id} 
-                  moviesCard={moviesCard}                                   
-                  savedMovies={savedMovies}                 
+                <MoviesCard
+                  key={moviesCard._id}
+                  moviesCard={moviesCard}
+                  savedMovies={savedMovies}
                   deleteMovie={deleteMovie}
                 />
               );

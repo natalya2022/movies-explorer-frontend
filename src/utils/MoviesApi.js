@@ -1,4 +1,4 @@
-import { MOVIES_URL } from "./constants";
+import { MOVIES_URL } from './constants';
 
 function checkRequest(res) {
   if (res.ok) {
@@ -13,6 +13,6 @@ export const getMovies = () => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
-    },    
+    }
   }).then(res => checkRequest(res));
 };

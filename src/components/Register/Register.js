@@ -86,7 +86,7 @@ const Register = ({ onAddUser, isSending, userError, resetErrors }) => {
               name="password"
               placeholder="Ваш пароль"
               onChange={handleChange}
-              value={values.password || ''} 
+              value={values.password || ''}
             />
           </div>
           <span className="form-register-error regauto__error-visible">

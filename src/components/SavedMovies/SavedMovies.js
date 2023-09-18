@@ -14,7 +14,7 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave 
     if (flagSave) {
       handleFilterMovies();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flagSave]);
 
   // функция перeключения короткометражек для избранного

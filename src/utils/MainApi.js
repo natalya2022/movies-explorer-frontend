@@ -1,9 +1,4 @@
-import { MOVIES_URL } from "./constants";
-
-export const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://api.movieinfo.nomoredomainsicu.ru'
-    : 'http://localhost:3000';
+import { MOVIES_URL, BASE_URL } from './constants';
 
 async function checkRequest(res) {
   if (res.ok) {
@@ -94,7 +89,7 @@ export const editUserProfile = ({ name, email }) => {
   }).then(res => checkRequest(res));
 };
 
-export const saveMovie = (movie) => {
+export const saveMovie = movie => {
   return fetch(`${BASE_URL}/movies`, {
     method: 'POST',
     headers: {
@@ -108,9 +103,9 @@ export const saveMovie = (movie) => {
       duration: movie.duration,
       year: movie.year,
       description: movie.description,
-      image: (`${MOVIES_URL}${movie.image.url}`),
+      image: `${MOVIES_URL}${movie.image.url}`,
       trailerLink: movie.trailerLink,
-      thumbnail: (`${MOVIES_URL}${movie.image.formats.thumbnail.url}`),
+      thumbnail: `${MOVIES_URL}${movie.image.formats.thumbnail.url}`,
       movieId: movie.id,
       nameRU: movie.nameRU,
       nameEN: movie.nameEN
@@ -118,7 +113,7 @@ export const saveMovie = (movie) => {
   }).then(res => checkRequest(res));
 };
 
-export const deleteMovie = (movieId) => {
+export const deleteMovie = movieId => {
   return fetch(`${BASE_URL}/movies/${movieId}`, {
     method: 'DELETE',
     credentials: 'include',
@@ -136,6 +131,6 @@ export const getMovies = () => {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    credentials: 'include',  
+    credentials: 'include'
   }).then(res => checkRequest(res));
 };

@@ -2,6 +2,7 @@ import './App.css';
 import './../../index.css';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import useLocalStorage from 'use-local-storage';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -12,6 +13,7 @@ import Login from '../Login/Login';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import Navigation from '../Navigation/Navigation';
 import * as api from '../../utils/MainApi.js';
+import * as movies from '../../utils/MoviesApi.js';
 import regtrue from '../../images/regtrue.svg';
 import iconinfo from '../../images/info_data_icon.svg';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
@@ -28,6 +30,17 @@ function App() {
   const [isUserError, setIsUserError] = useState({ error: '' });
   const [isEditableProfile, setIsEditableProfile] = useState(false);
 
+  const [moviesAll, setMoviesAll] = useLocalStorage('movies', []);
+  const [moviesCards, setMoviesCards] = useLocalStorage('filteredMovies', []);
+  const [filterParameters, setFilterParameters] = useLocalStorage('filterParameters', {
+    search: '',
+    shorts: false
+  });
+  const [searchString, setSearchString] = useState(filterParameters.search);
+  const [filteredShorts, setFilteredShorts] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [flagSave, setFlagSave] = useState(false);
+
   const navigate = useNavigate();
 
   const toolMessage = { ok: 0, err: 1 };
@@ -36,6 +49,7 @@ function App() {
     { link: iconinfo, text: 'Что-то пошло не так! Попробуйте еще раз.' }
   ];
 
+  // загрузка данных пользователя
   useEffect(() => {
     if (isLoggedIn) {
       api
@@ -49,6 +63,35 @@ function App() {
     }
   }, [isLoggedIn]);
 
+  // загрузка фильмов с сервера beatfilm-movies
+  useEffect(() => {
+    if (isLoggedIn) {
+      movies
+        .getMovies()
+        .then(movies => {
+          setMoviesAll(movies);          
+        })
+        .catch(console.error);
+    } else {
+      setMoviesAll([]);
+    }
+  }, [isLoggedIn, setMoviesAll]);
+
+  // загрузка сохраненных фильмов
+  useEffect(() => {
+    if (isLoggedIn) {
+      api
+        .getMovies()
+        .then(movies => {
+          setSavedMovies(movies);
+          setFlagSave(false);          
+        })
+        .catch(console.error);
+    } else {
+      setSavedMovies([]);
+    }
+  }, [isLoggedIn, flagSave]);
+
   // функция открытия мобильного меню
   function toggleMenu() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -59,12 +102,12 @@ function App() {
     setIsInfoTooltipOpen(true);
   }
 
-  //функия закрытия попапа уведомления
+  //функция закрытия попапа уведомления
   const closePopup = () => {
     setIsInfoTooltipOpen(false);
   };
 
-  // функция включения выключения редактирования профиля
+  // функция включения/выключения редактирования профиля
   function handleUserProfileEdit(editFlag) {
     setIsEditableProfile(editFlag);
     resetErrors();
@@ -141,12 +184,15 @@ function App() {
   }
 
   // функция выхода из системы
-  function userLogOut() {
+  function handleUserLogOut() {
     api.logOut();
     setIsLoggedIn(false);
     setCurrentUser({});
-    // setCards([]);
     setIsMobileMenuOpen(false);
+    setMoviesCards([]);
+    setMoviesCards([]);
+    setFilteredShorts(false);
+    setFilterParameters([]);
   }
 
   // функция изменения данных пользователя
@@ -172,6 +218,84 @@ function App() {
       .finally(() => setIsUserSending(false));
   }
 
+  // функция сохранения/удаления фильма из избранного
+  function handleLikeMovie(movie, likeMovieId = 0) {
+    console.log(movie, likeMovieId);
+    if (likeMovieId) {
+      handleDelteMovie(likeMovieId); // дизлайкаем == удаляем из сохраненных
+    } else {
+      handleSaveMovie(movie); // лайкаем == добавляем в сохраненные
+    }
+  }
+
+  // функция добавления фильма
+  function handleSaveMovie(movie) {
+    api
+      .saveMovie(movie)
+      .then(newMovie => {
+        setSavedMovies([...savedMovies, newMovie]);
+        //console.log(savedMovies);
+      })
+      .catch(console.error);
+  }
+
+  //функция удаления фильма
+  function handleDelteMovie(likeMovie) {
+    api
+      .deleteMovie(likeMovie)
+      .then(() => {
+        setSavedMovies(movie => movie.filter(c => c._id !== likeMovie));
+        setFlagSave(true);
+      })
+      .catch(console.error);
+  }
+
+  // function handleSaveMovie(movie, likeMovie = 0) {
+  //   console.log(movie, likeMovie);
+  //   if (likeMovie) {
+  //     // дизлайкаем == удаляем из сохранённых
+  //     api
+  //       .deleteMovie(likeMovie)
+  //       .then(() => {
+  //         setSavedMovies(movie => movie.filter(c => c._id !== likeMovie));
+  //       })
+  //       .catch(console.error);
+  //   } else {
+  //     // лайкаем == добавляем в сохранённые
+  //     api
+  //       .saveMovie(movie)
+  //       .then(newMovie => {
+  //         setSavedMovies([...savedMovies, newMovie]);
+  //         console.log(savedMovies);
+  //       })
+  //       .catch(console.error);
+  //   }
+  // }
+
+  // функция перeключения короткометражек
+  function handleShortsToggle() {
+    setFilterParameters({ ...filterParameters, shorts: !filterParameters.shorts });
+    setFilteredShorts(moviesCards.filter(item => item.duration <= 40));
+  }
+
+  // функция сохранения значения поисковой строки
+  function searchChange(value) {
+    setSearchString(value);
+  }
+
+  // функция фильтрации фильмов
+  function handleFilterMovies(e) {
+    e.preventDefault();
+    const tempMovies = moviesAll.filter(
+      item =>
+        item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
+        item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
+    );
+    setMoviesCards(tempMovies);
+    setFilteredShorts(tempMovies.filter(item => item.duration <= 40));
+    setFilterParameters({ ...filterParameters, search: searchString });
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="root">
@@ -180,11 +304,33 @@ function App() {
             <Route path="/" element={<Main toggleMenu={toggleMenu} loggedIn={isLoggedIn} />} />
             <Route
               path="/movies"
-              element={<Movies toggleMenu={toggleMenu} loggedIn={isLoggedIn} />}
+              element={
+                <Movies
+                  toggleMenu={toggleMenu}
+                  loggedIn={isLoggedIn}
+                  filterParameters={filterParameters}
+                  toggleShorts={handleShortsToggle}
+                  filterMovies={handleFilterMovies}
+                  likeMovie={handleLikeMovie}
+                  searchString={searchString}
+                  searchChange={searchChange}
+                  savedMovies={savedMovies}
+                  moviesCards={moviesCards}
+                  filteredShorts={filteredShorts}
+                />
+              }
             />
             <Route
               path="/saved-movies"
-              element={<SavedMovies toggleMenu={toggleMenu} loggedIn={isLoggedIn} />}
+              element={
+                <SavedMovies
+                  toggleMenu={toggleMenu}
+                  loggedIn={isLoggedIn}
+                  savedMovies={savedMovies}
+                  deleteMovie={handleDelteMovie}
+                  flagSave={flagSave}
+                />
+              }
             />
             <Route
               path="/profile"
@@ -193,7 +339,7 @@ function App() {
                   onUpdateUser={handleUpdateUser}
                   toggleMenu={toggleMenu}
                   loggedIn={isLoggedIn}
-                  userLogOut={userLogOut}
+                  onUserLogOut={handleUserLogOut}
                   isSending={isUserSending}
                   userError={isUserError}
                   resetErrors={resetErrors}
@@ -219,7 +365,6 @@ function App() {
                 <Login
                   onUserLogin={handleUserLogin}
                   isSending={isLoginSending}
-                  onUserLogOut={userLogOut}
                   userError={isUserError}
                   resetErrors={resetErrors}
                 />

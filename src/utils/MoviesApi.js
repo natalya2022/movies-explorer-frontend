@@ -1,4 +1,4 @@
-import { BASE_URL } from "./constants";
+import { MOVIES_URL } from "./constants";
 
 function checkRequest(res) {
   if (res.ok) {
@@ -8,7 +8,7 @@ function checkRequest(res) {
 }
 
 export const getMovies = () => {
-  return fetch(`${BASE_URL}/beatfilm-movies`, {
+  return fetch(`${MOVIES_URL}/beatfilm-movies`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

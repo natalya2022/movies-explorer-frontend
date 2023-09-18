@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://api.nomoreparties.co';
+export const MOVIES_URL = 'https://api.nomoreparties.co';
 
 // массив содержит элементы:
 // 0 - max разрешение экрана при заданной раскладке карточек

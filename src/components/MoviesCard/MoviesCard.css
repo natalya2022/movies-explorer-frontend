@@ -43,6 +43,10 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    max-height: 16px;
 }
 
 .movies-grid__duration {

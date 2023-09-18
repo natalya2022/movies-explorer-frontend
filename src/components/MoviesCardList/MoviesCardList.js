@@ -2,22 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
-import { COUNT_FIRST, COUNT_ADD, COUNT_LINE, countSelectorArray } from '../../utils/constants';
+import { COUNT_FIRST, COUNT_ADD, countSelectorArray } from '../../utils/constants';
 
-const MoviesCardList = ({ moviesCards }) => { 
-
+const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) => {
   const [countMovies, setCountMovies] = useState(countSelector(COUNT_FIRST));
+  console.log('**', moviesCards);
 
   // навешивет слушатель, который при изменении разрешения
-  // вызывает функцию пересчета кол-ва карточек
+  // вызывает функцию пересчета кол-ва карточек 
+  // расчет содержится в массиве countSelectorArray
+  // текущие параметры добавления: при изменении экран
+  // показывает количество карт как при первоначальной загрузке
   useEffect(() => {
     let timeout;
 
-    const handleResize = event => {
+    const handleResize = e => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
-        const column = countSelector(COUNT_LINE);
-        setCountMovies(Math.ceil(countMovies / column) * column);
+        // const column = countSelector(COUNT_LINE);
+        // setCountMovies(Math.ceil(countMovies / column) * column);
+        setCountMovies(countSelector(COUNT_FIRST));
       }, 10);
     };
     window.addEventListener('resize', handleResize);
@@ -25,7 +29,6 @@ const MoviesCardList = ({ moviesCards }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, [countMovies, countSelector]);
-
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function countSelector(first, width = window.innerWidth) {
@@ -46,7 +49,12 @@ const MoviesCardList = ({ moviesCards }) => {
           <ul className="movies-grid__places">
             {moviesCards.map((moviesCard, index) => {
               return index < countMovies ? (
-                <MoviesCard moviesCard={moviesCard} key={moviesCard.id} index={index} />
+                <MoviesCard
+                  moviesCard={moviesCard}
+                  key={moviesCard.id}                 
+                  likeMovie={likeMovie}
+                  savedMovies={savedMovies}
+                />
               ) : (
                 <></>
               );
@@ -68,18 +76,17 @@ const MoviesCardList = ({ moviesCards }) => {
       ) : (
         <>
           <ul className="movies-grid__places">
-            <MoviesCard />
-            <MoviesCard />
-            <MoviesCard />
+            {moviesCards.map((moviesCard, index) => {
+              return (
+                <MoviesCard                  
+                  key={moviesCard._id} 
+                  moviesCard={moviesCard}                                   
+                  savedMovies={savedMovies}                 
+                  deleteMovie={deleteMovie}
+                />
+              );
+            })}
           </ul>
-          <div className="movies-grid__more">
-            <ButtonUniversal
-              className={'button-more button-more_hidden'}
-              buttonText={'Еще'}
-              type={'button'}
-              onClick={outputCount}
-            />
-          </div>
         </>
       )}
     </section>

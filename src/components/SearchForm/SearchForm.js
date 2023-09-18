@@ -3,13 +3,13 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 
 const SearchForm = ({
-  filterParameters,
+  filterShorts,
   toggleShorts,
   filterMovies,
   searchChange,
   searchString
 }) => {
-  console.log(filterParameters, searchString);
+  console.log(filterShorts, searchString);
 
   return (
     <section className="search">
@@ -29,7 +29,7 @@ const SearchForm = ({
             <ButtonUniversal className={'button-search'} type={'submit'} onClick={filterMovies} />
           </div>
           <div className="search__checkbox">
-            <FilterCheckbox checkboxState={filterParameters.shorts} toggleShorts={toggleShorts} />
+            <FilterCheckbox checkboxState={filterShorts} toggleShorts={toggleShorts} />
           </div>
         </div>
       </form>

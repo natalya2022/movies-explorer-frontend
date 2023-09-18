@@ -9,7 +9,7 @@ import { REGEXP_EMAIL } from '../../utils/regex';
 const Profile = ({
   toggleMenu,
   loggedIn,
-  userLogOut,
+  onUserLogOut,
   onUpdateUser,
   isSending,
   userError,
@@ -96,7 +96,7 @@ const Profile = ({
                   >
                     Редактировать
                   </button>
-                  <Link to="/" className="profile__logout" onClick={userLogOut}>
+                  <Link to="/" className="profile__logout" onClick={onUserLogOut}>
                     Выйти из аккаунта
                   </Link>
                 </>

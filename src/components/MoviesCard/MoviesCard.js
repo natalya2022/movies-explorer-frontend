@@ -1,10 +1,8 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
-import { BASE_URL } from '../../utils/constants';
+import { MOVIES_URL } from '../../utils/constants';
 
-const MoviesCard = ({ moviesCard, index }) => {
-  // переменная изменения вида кнопки "избранное"
+const MoviesCard = ({ moviesCard, likeMovie, savedMovies, deleteMovie }) => {
   const location = useLocation();
 
   function durationFormat() {
@@ -24,8 +22,13 @@ const MoviesCard = ({ moviesCard, index }) => {
   }
 
   function imageFormat() {
-    return `${BASE_URL}${moviesCard?.image?.url}`;
+    return location.pathname === '/movies' ? MOVIES_URL + moviesCard?.image?.url : moviesCard.image;
   }
+
+  const likeMovieId =
+    location.pathname === '/movies'
+      ? savedMovies.find(movie => movie.movieId === moviesCard.id)?._id
+      : moviesCard._id;
 
   return (
     <li className="movies-grid__place">
@@ -33,16 +36,20 @@ const MoviesCard = ({ moviesCard, index }) => {
       <div className="movies-grid__rectangle">
         <div className="movies-grid__info">
           <h2 className="movies-grid__title">{moviesCard.nameRU}</h2>
-          <p className="movies-grid__duration">{index}) {durationFormat()}</p>
+          <p className="movies-grid__duration">{durationFormat()}</p>
         </div>
         {location.pathname === '/movies' ? (
-          <ButtonUniversal
-            className={'button-selectmovies'}
-            classNameActive={'button-selectmovies_color'}
+          <button
+            className={'button-selectmovies' + (likeMovieId ? ' button-selectmovies_color' : '')}
             type={'button'}
+            onClick={() => likeMovie(moviesCard, likeMovieId)}
           />
         ) : (
-          <ButtonUniversal className={'button-deletemovies'} type={'button'} />
+          <button
+            className="button-deletemovies"
+            type="button"
+            onClick={() => deleteMovie(likeMovieId)}
+          />
         )}
       </div>
     </li>

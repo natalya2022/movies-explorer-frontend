@@ -7,11 +7,13 @@ const SearchForm = ({ filterShorts, toggleShorts, filterMovies, searchChange, se
 
   return (
     <section className="search">
-      <form className="search__form">
+      <form className="search__form" name="form-search" noValidate>
         <div className="search__container">
           <div className="search__bar">
             <input
               className="search__input"
+              id="form-search-string"
+              name="search-string"
               type="text"
               placeholder="Фильм"
               required

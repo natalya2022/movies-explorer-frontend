@@ -36,17 +36,18 @@ function App() {
     search: '',
     shorts: false
   });
-  const [searchString, setSearchString] = useState(filterParameters.search);
+  const [searchString, setSearchString] = useState(filterParameters.search);  
   const [filteredShorts, setFilteredShorts] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
   const [flagSave, setFlagSave] = useState(false);
 
   const navigate = useNavigate();
 
-  const toolMessage = { ok: 0, err: 1 };
+  const toolMessage = { ok: 0, err: 1, search: 2 };
   const toolMessages = [
     { link: regtrue, text: 'Данные профиля изменены!' },
-    { link: iconinfo, text: 'Что-то пошло не так! Попробуйте еще раз.' }
+    { link: iconinfo, text: 'Что-то пошло не так! Попробуйте еще раз.' },
+    { link: iconinfo, text: 'Нужно ввести ключевое слово!' }
   ];
 
   // загрузка данных пользователя
@@ -55,7 +56,7 @@ function App() {
       api
         .getUserInfo()
         .then(user => {
-          setCurrentUser(user);
+          setCurrentUser(user);          
         })
         .catch(console.error);
     } else {
@@ -69,7 +70,7 @@ function App() {
       movies
         .getMovies()
         .then(movies => {
-          setMoviesAll(movies);          
+          setMoviesAll(movies);
         })
         .catch(console.error);
     } else {
@@ -190,9 +191,9 @@ function App() {
     setCurrentUser({});
     setIsMobileMenuOpen(false);
     setMoviesCards([]);
-    setMoviesCards([]);
+    setSearchString('');
     setFilteredShorts(false);
-    setFilterParameters([]);
+    setFilterParameters({});
   }
 
   // функция изменения данных пользователя
@@ -264,7 +265,11 @@ function App() {
   // функция фильтрации фильмов
   function handleFilterMovies(e) {
     e.preventDefault();
-    const tempMovies = moviesAll.filter(
+    if (searchString === '') {
+      handleInfoTooltipOpen();
+      setToooltipMessage(toolMessages[toolMessage.search]);
+    }
+    else {const tempMovies = moviesAll.filter(
       item =>
         item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
         item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
@@ -272,6 +277,7 @@ function App() {
     setMoviesCards(tempMovies);
     setFilteredShorts(tempMovies.filter(item => item.duration <= 40));
     setFilterParameters({ ...filterParameters, search: searchString });
+    }
   }
 
   return (

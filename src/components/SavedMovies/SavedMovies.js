@@ -31,7 +31,7 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave 
   // функция фильтрации фильмов избранного
   function handleFilterMovies(e) {
     if (e) {
-      e.preventDefault();
+      e.preventDefault();     
     }
     const tempMovies = savedMovies.filter(
       item =>

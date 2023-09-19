@@ -1,26 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import { toolMessage, toolMessages } from '../../utils/constants';
 
-const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave }) => {
+const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave, tooltipOpen }) => {
   const [filterShorts, setFilterShorts] = useState([]);
   const [searchString, setSearchString] = useState('');
   const [filteredMovies, setFilteredMovies] = useState(savedMovies);
   const [checkBoxParameters, setCheckBoxParameters] = useState(false);
 
+  // обновляет выдачу фильмов при обновлении страницы
   useEffect(() => {
-    if (flagSave) {
+    if (savedMovies) {
       handleFilterMovies();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flagSave]);
+  }, [savedMovies]);
 
   // функция перeключения короткометражек для избранного
   function handleShortsToggle() {
-    setCheckBoxParameters(!checkBoxParameters);
-    setFilterShorts(savedMovies.filter(item => item.duration <= 40));
+    setCheckBoxParameters(!checkBoxParameters);   
   }
 
   // функция сохранения значения поисковой строки для избранного
@@ -30,8 +31,12 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave 
 
   // функция фильтрации фильмов избранного
   function handleFilterMovies(e) {
-    if (e) {
-      e.preventDefault();     
+    if(e){
+      e.preventDefault();
+      if (searchString === '') {
+        tooltipOpen(toolMessages[toolMessage.search]);
+        return;
+      }
     }
     const tempMovies = savedMovies.filter(
       item =>
@@ -39,7 +44,12 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave 
         item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
     );
     setFilteredMovies(tempMovies);
-    setFilterShorts(tempMovies.filter(item => item.duration <= 40));
+    const tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
+    setFilterShorts(tempMoviesShort);    
+
+    if(e && (tempMovies.length===0 || (checkBoxParameters && tempMoviesShort.length===0))){
+      tooltipOpen(toolMessages[toolMessage.noresult]);
+    }
   }
 
   return (

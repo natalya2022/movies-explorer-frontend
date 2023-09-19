@@ -1,9 +1,10 @@
 import './App.css';
 import './../../index.css';
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import useLocalStorage from 'use-local-storage';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
@@ -14,9 +15,9 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import Navigation from '../Navigation/Navigation';
 import * as api from '../../utils/MainApi.js';
 import * as movies from '../../utils/MoviesApi.js';
-import regtrue from '../../images/regtrue.svg';
-import iconinfo from '../../images/info_data_icon.svg';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import { toolMessage, toolMessages, serverErrors } from '../../utils/constants';
+import Preloader from '../Preloader/Preloader';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -36,29 +37,27 @@ function App() {
     search: '',
     shorts: false
   });
-  const [searchString, setSearchString] = useState(filterParameters.search);  
-  const [filteredShorts, setFilteredShorts] = useState([]);
-  const [savedMovies, setSavedMovies] = useState([]);
-  const [flagSave, setFlagSave] = useState(false);
+  const [searchString, setSearchString] = useState(filterParameters.search);
+  const [filteredShorts, setFilteredShorts] = useLocalStorage('filteredShorts', []);
+  const [savedMovies, setSavedMovies] = useState([]);  
+  const [isPreloaderOpen, setIsPreloaderOpen] = useState(false);
 
   const navigate = useNavigate();
-
-  const toolMessage = { ok: 0, err: 1, search: 2 };
-  const toolMessages = [
-    { link: regtrue, text: 'Данные профиля изменены!' },
-    { link: iconinfo, text: 'Что-то пошло не так! Попробуйте еще раз.' },
-    { link: iconinfo, text: 'Нужно ввести ключевое слово!' }
-  ];
+  const location = useLocation();
 
   // загрузка данных пользователя
   useEffect(() => {
     if (isLoggedIn) {
+      setIsPreloaderOpen(true);
       api
         .getUserInfo()
         .then(user => {
-          setCurrentUser(user);          
+          setCurrentUser(user);
         })
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => {        
+          setIsPreloaderOpen(false);
+        });   
     } else {
       setCurrentUser({});
     }
@@ -81,17 +80,20 @@ function App() {
   // загрузка сохраненных фильмов
   useEffect(() => {
     if (isLoggedIn) {
+      setIsPreloaderOpen(true);
       api
         .getMovies()
         .then(movies => {
-          setSavedMovies(movies);
-          setFlagSave(false);          
+          setSavedMovies(movies);                   
         })
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => {        
+          setIsPreloaderOpen(false);
+        });        
     } else {
       setSavedMovies([]);
     }
-  }, [isLoggedIn, flagSave]);
+  }, [isLoggedIn]);
 
   // функция открытия мобильного меню
   function toggleMenu() {
@@ -99,8 +101,9 @@ function App() {
   }
 
   // функция открытия попапа уведомения
-  function handleInfoTooltipOpen() {
+  function handleInfoTooltipOpen(message) {
     setIsInfoTooltipOpen(true);
+    setToooltipMessage(message);
   }
 
   //функция закрытия попапа уведомления
@@ -122,6 +125,7 @@ function App() {
   // функция регистрации нового пользователя
   function handleNewUserReg(name, email, password) {
     setIsRegisterSending(true);
+    setIsPreloaderOpen(true);
     api
       .register(name, email, password)
       .then(res => {
@@ -130,18 +134,22 @@ function App() {
       })
       .catch(err => {
         console.error(err.status);
-        if (err.message === 'Validation failed') {
-          setIsUserError({ error: toolMessages[toolMessage.err].text });
-        } else {
+        if (serverErrors.includes(err.message)) {
           setIsUserError({ error: err.message });
+        } else {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
         }
       })
-      .finally(() => setIsRegisterSending(false));
+      .finally(() => {
+        setIsRegisterSending(false);
+        setIsPreloaderOpen(false);
+      });
   }
 
   // функция авторизации пользователя
   function handleUserLogin(email, password) {
     setIsLoginSending(true);
+    setIsPreloaderOpen(true);
     api
       .authorize(email, password)
       .then(res => {
@@ -150,13 +158,16 @@ function App() {
       })
       .catch(err => {
         console.error(err.status);
-        if (err.message === 'Validation failed') {
-          setIsUserError({ error: toolMessages[toolMessage.err].text });
-        } else {
+        if (serverErrors.includes(err.message)) {
           setIsUserError({ error: err.message });
+        } else {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
         }
       })
-      .finally(() => setIsLoginSending(false));
+      .finally(() => {
+        setIsLoginSending(false);
+        setIsPreloaderOpen(false);
+      });
   }
 
   // хук проверки токена
@@ -168,7 +179,7 @@ function App() {
   // функция проверки токена
   function handleCheckToken() {
     if (isLoggedIn) {
-      navigate('/movies');
+      navigate('/');
       return;
     }
     api
@@ -176,7 +187,7 @@ function App() {
       .then(res => {
         setIsLoggedIn(true);
         setCurrentUser(res);
-        navigate('/movies');
+        navigate(location.pathname);
       })
       .catch(err => {
         console.error(err);
@@ -192,31 +203,40 @@ function App() {
     setIsMobileMenuOpen(false);
     setMoviesCards([]);
     setSearchString('');
-    setFilteredShorts(false);
+    setFilteredShorts([false]);
     setFilterParameters({});
+    setSavedMovies([]);
+    localStorage.removeItem('movies');
+    localStorage.removeItem('filteredMovies');
+    localStorage.removeItem('filterParameters');
+    localStorage.removeItem('filteredShorts');
   }
 
   // функция изменения данных пользователя
   function handleUpdateUser(name, email) {
     setIsUserSending(true);
+    setIsPreloaderOpen(true);
     api
       .editUserProfile(name, email)
       .then(userData => {
         setCurrentUser(userData);
-        handleInfoTooltipOpen();
-        setToooltipMessage(toolMessages[toolMessage.ok]);
+        setIsPreloaderOpen(false);
+        handleInfoTooltipOpen(toolMessages[toolMessage.ok]);
         setIsEditableProfile(false);
         resetErrors();
       })
       .catch(err => {
         console.error(err.status);
-        if (err.message === 'Validation failed') {
-          setIsUserError({ error: toolMessages[toolMessage.err].text });
-        } else {
+        if (serverErrors.includes(err.message)) {
           setIsUserError({ error: err.message });
+        } else {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
         }
       })
-      .finally(() => setIsUserSending(false));
+      .finally(() => {
+        setIsUserSending(false);
+        setIsPreloaderOpen(false);
+      });
   }
 
   // функция сохранения/удаления фильма из избранного
@@ -231,24 +251,44 @@ function App() {
 
   // функция добавления фильма
   function handleSaveMovie(movie) {
+    setIsPreloaderOpen(true);
     api
       .saveMovie(movie)
       .then(newMovie => {
-        setSavedMovies([...savedMovies, newMovie]);
-        //console.log(savedMovies);
+        setSavedMovies([...savedMovies, newMovie]);        
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err.status);
+        if (serverErrors.includes(err.message)) {
+          setIsUserError({ error: err.message });
+        } else {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
+        }
+      })
+      .finally(() => {        
+        setIsPreloaderOpen(false);
+      });
   }
 
   //функция удаления фильма
   function handleDelteMovie(likeMovie) {
+    setIsPreloaderOpen(true);
     api
       .deleteMovie(likeMovie)
       .then(() => {
-        setSavedMovies(movie => movie.filter(c => c._id !== likeMovie));
-        setFlagSave(true);
+        setSavedMovies(movies => movies.filter(c => c._id !== likeMovie));        
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err.status);
+        if (serverErrors.includes(err.message)) {
+          setIsUserError({ error: err.message });
+        } else {
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
+        }
+      })
+      .finally(() => {        
+        setIsPreloaderOpen(false);
+      });
   }
 
   // функция перeключения короткометражек
@@ -264,19 +304,28 @@ function App() {
 
   // функция фильтрации фильмов
   function handleFilterMovies(e) {
-    e.preventDefault();
-    if (searchString === '') {
-      handleInfoTooltipOpen();
-      setToooltipMessage(toolMessages[toolMessage.search]);
+    if (e) {
+      e.preventDefault();
+      if (searchString === '') {
+        handleInfoTooltipOpen(toolMessages[toolMessage.search]);
+        return;
+      }
     }
-    else {const tempMovies = moviesAll.filter(
+    const tempMovies = moviesAll.filter(
       item =>
         item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
         item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
     );
     setMoviesCards(tempMovies);
-    setFilteredShorts(tempMovies.filter(item => item.duration <= 40));
+    const tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
+    setFilteredShorts(tempMoviesShort);
     setFilterParameters({ ...filterParameters, search: searchString });
+
+    if (
+      e &&
+      (tempMovies.length === 0 || (filterParameters.shorts && tempMoviesShort.length === 0))
+    ) {
+      handleInfoTooltipOpen(toolMessages[toolMessage.noresult]);
     }
   }
 
@@ -286,52 +335,6 @@ function App() {
         <div className="page">
           <Routes>
             <Route path="/" element={<Main toggleMenu={toggleMenu} loggedIn={isLoggedIn} />} />
-            <Route
-              path="/movies"
-              element={
-                <Movies
-                  toggleMenu={toggleMenu}
-                  loggedIn={isLoggedIn}
-                  filterParameters={filterParameters}
-                  toggleShorts={handleShortsToggle}
-                  filterMovies={handleFilterMovies}
-                  likeMovie={handleLikeMovie}
-                  searchString={searchString}
-                  searchChange={searchChange}
-                  savedMovies={savedMovies}
-                  moviesCards={moviesCards}
-                  filteredShorts={filteredShorts}
-                />
-              }
-            />
-            <Route
-              path="/saved-movies"
-              element={
-                <SavedMovies
-                  toggleMenu={toggleMenu}
-                  loggedIn={isLoggedIn}
-                  savedMovies={savedMovies}
-                  deleteMovie={handleDelteMovie}
-                  flagSave={flagSave}
-                />
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <Profile
-                  onUpdateUser={handleUpdateUser}
-                  toggleMenu={toggleMenu}
-                  loggedIn={isLoggedIn}
-                  onUserLogOut={handleUserLogOut}
-                  isSending={isUserSending}
-                  userError={isUserError}
-                  resetErrors={resetErrors}
-                  editableProfile={isEditableProfile}
-                  editProfile={handleUserProfileEdit}
-                />
-              }
-            />
             <Route
               path="/signup"
               element={
@@ -354,6 +357,67 @@ function App() {
                 />
               }
             />
+            <Route
+              path="/movies"
+              element={
+                <ProtectedRoute
+                  loggedIn={isLoggedIn}
+                  element={
+                    <Movies
+                      toggleMenu={toggleMenu}
+                      loggedIn={isLoggedIn}
+                      filterParameters={filterParameters}
+                      toggleShorts={handleShortsToggle}
+                      filterMovies={handleFilterMovies}
+                      likeMovie={handleLikeMovie}
+                      searchString={searchString}
+                      searchChange={searchChange}
+                      savedMovies={savedMovies}
+                      moviesCards={moviesCards}
+                      filteredShorts={filteredShorts}
+                    />
+                  }
+                />
+              }
+            />
+            <Route
+              path="/saved-movies"
+              element={
+                <ProtectedRoute
+                  loggedIn={isLoggedIn}
+                  element={
+                    <SavedMovies
+                      toggleMenu={toggleMenu}
+                      loggedIn={isLoggedIn}
+                      savedMovies={savedMovies}
+                      deleteMovie={handleDelteMovie}                      
+                      tooltipOpen={handleInfoTooltipOpen}
+                    />
+                  }
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute
+                  loggedIn={isLoggedIn}
+                  element={
+                    <Profile
+                      onUpdateUser={handleUpdateUser}
+                      toggleMenu={toggleMenu}
+                      loggedIn={isLoggedIn}
+                      onUserLogOut={handleUserLogOut}
+                      isSending={isUserSending}
+                      userError={isUserError}
+                      resetErrors={resetErrors}
+                      editableProfile={isEditableProfile}
+                      editProfile={handleUserProfileEdit}                      
+                    />
+                  }
+                />
+              }
+            />
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
           <Navigation isOpen={isMobileMenuOpen} toggleMenu={toggleMenu} />
@@ -363,6 +427,7 @@ function App() {
           toooltipMessage={toooltipMessage}
           isOpen={isInfoTooltipOpen}
         />
+        <Preloader isOpen={isPreloaderOpen} />
       </div>
     </CurrentUserContext.Provider>
   );

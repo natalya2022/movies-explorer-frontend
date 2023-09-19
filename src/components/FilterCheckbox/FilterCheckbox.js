@@ -1,7 +1,6 @@
 import React from 'react';
 
-const FilterCheckbox = ({ checkboxState, toggleShorts }) => {
-  console.log(checkboxState);
+const FilterCheckbox = ({ checkboxState, toggleShorts }) => {  
 
   return (
     <div className="checkbox">

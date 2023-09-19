@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
@@ -6,13 +7,11 @@ import { COUNT_FIRST, COUNT_ADD, countSelectorArray } from '../../utils/constant
 
 const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) => {
   const [countMovies, setCountMovies] = useState(countSelector(COUNT_FIRST));
-  console.log('**', moviesCards);
 
   // навешивет слушатель, который при изменении разрешения
   // вызывает функцию пересчета кол-ва карточек
   // расчет содержится в массиве countSelectorArray
-  // текущие параметры добавления: при изменении экран
-  // показывает количество карт как при первоначальной загрузке
+
   useEffect(() => {
     let timeout;
 
@@ -30,7 +29,6 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
     };
   }, [countMovies, countSelector]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   function countSelector(first, width = window.innerWidth) {
     return countSelectorArray.find(item => item[0] >= width)[first];
   }
@@ -47,18 +45,14 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
       {location.pathname === '/movies' ? (
         <>
           <ul className="movies-grid__places">
-            {moviesCards.map((moviesCard, index) => {
-              return index < countMovies ? (
+            {moviesCards.filter((_, index) => index < countMovies ).map(moviesCard => 
                 <MoviesCard
                   moviesCard={moviesCard}
                   key={moviesCard.id}
                   likeMovie={likeMovie}
                   savedMovies={savedMovies}
                 />
-              ) : (
-                <></>
-              );
-            })}
+              )}
           </ul>
           <div className="movies-grid__more">
             {countMovies < moviesCards.length ? (
@@ -76,7 +70,7 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
       ) : (
         <>
           <ul className="movies-grid__places">
-            {moviesCards.map((moviesCard, index) => {
+            {moviesCards.map((moviesCard ) => {
               return (
                 <MoviesCard
                   key={moviesCard._id}

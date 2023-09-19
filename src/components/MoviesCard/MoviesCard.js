@@ -31,8 +31,8 @@ const MoviesCard = ({ moviesCard, likeMovie, savedMovies, deleteMovie }) => {
       : moviesCard._id;
 
   return (
-    <li className="movies-grid__place">
-      <img src={imageFormat()} alt="Фильм" className="movies-grid__picture" />
+    <li className="movies-grid__place" >
+      <img src={imageFormat()} alt={moviesCard.nameRU} className="movies-grid__picture" onClick={() => window.open(`${moviesCard.trailerLink}`)}/>
       <div className="movies-grid__rectangle">
         <div className="movies-grid__info">
           <h2 className="movies-grid__title">{moviesCard.nameRU}</h2>

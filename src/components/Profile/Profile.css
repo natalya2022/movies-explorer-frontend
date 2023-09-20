@@ -100,6 +100,11 @@
 .profile__logout {
     display: block;
     color: #EE3465;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
     text-align: center;
     font-size: 13px;
     font-style: normal;
@@ -107,6 +112,7 @@
     line-height: normal;
     text-decoration: none;
     transition: opacity 0.3s;
+    background-color: #FAFAFA;
 }
 
 .profile__logout:hover {
@@ -154,7 +160,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    background: #FAFAFA;
+    background-color: #FAFAFA;
 }
 
 .profile__button-edit:hover {

@@ -39,7 +39,8 @@
 
 .movies-grid__title {
     display: block;
-    margin: 0 0 10px 0;
+    /* margin: 0 0 10px 0; */
+    margin: 0;
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
@@ -47,11 +48,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     flex-grow: 1;
-    max-height: 16px;
+    min-height: 32px;
 }
 
 .movies-grid__duration {
-    margin: 0;
+    margin: 5px 0 0 0;
     padding: 0;
     color: #A0A0A0;
     font-size: 11px;

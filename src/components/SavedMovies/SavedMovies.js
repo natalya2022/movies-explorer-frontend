@@ -12,14 +12,17 @@ const SavedMovies = ({
   savedMovies,
   deleteMovie,
   tooltipOpen,
-  userError
+  userError,
+  resetErrors
 }) => {
   const [filterShorts, setFilterShorts] = useState([]);
   const [searchString, setSearchString] = useState('');
   const [filteredMovies, setFilteredMovies] = useState(savedMovies);
   const [checkBoxParameters, setCheckBoxParameters] = useState(false);
 
-console.log(userError);
+  useEffect(() => {
+    resetErrors();
+  }, []);
 
   // обновляет выдачу фильмов при обновлении страницы
   useEffect(() => {
@@ -60,7 +63,7 @@ console.log(userError);
     if (e && (tempMovies.length === 0 || (checkBoxParameters && tempMoviesShort.length === 0))) {
       tooltipOpen(toolMessages[toolMessage.noresult]);
     }
-    
+
     if (e && savedMovies.length === 0) {
       tooltipOpen(toolMessages[toolMessage.empty]);
     }

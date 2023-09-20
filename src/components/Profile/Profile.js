@@ -2,7 +2,6 @@
 import React, { useContext, useEffect } from 'react';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import Header from '../Header/Header';
-import { Link } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { REGEXP_EMAIL } from '../../utils/regex';
 
@@ -95,10 +94,9 @@ const Profile = ({
                     }}
                   >
                     Редактировать
-                  </button>
-                  <Link to="/" className="profile__logout" onClick={onUserLogOut}>
-                    Выйти из аккаунта
-                  </Link>
+                  </button>                  
+                  <button className="profile__logout" onClick={onUserLogOut}>
+                    Выйти из аккаунта</button>
                 </>
               ) : (
                 <button

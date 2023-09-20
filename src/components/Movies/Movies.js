@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
@@ -16,8 +16,15 @@ const Movies = ({
   moviesCards,
   filteredShorts,
   searchChange,
-  userError,  
+  userError,
+  resetErrors
 }) => {
+  
+  useEffect(() => {
+    resetErrors();
+  // eslint-disable-next-line
+  }, []);
+
   return (
     <div className="page-wrap">
       <Header toggleMenu={toggleMenu} loggedIn={loggedIn} />
@@ -33,7 +40,7 @@ const Movies = ({
           moviesCards={!filterParameters.shorts ? moviesCards : filteredShorts}
           likeMovie={likeMovie}
           savedMovies={savedMovies}
-          userError={userError}                      
+          userError={userError}
         />
       </main>
       <Footer />

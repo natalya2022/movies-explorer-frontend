@@ -142,6 +142,7 @@ function App() {
   function handleNewUserReg(name, email, password) {
     setIsRegisterSending(true);
     setIsPreloaderOpen(true);
+    resetErrors();
     api
       .register(name, email, password)
       .then(res => {
@@ -167,6 +168,7 @@ function App() {
   function handleUserLogin(email, password) {
     setIsLoginSending(true);
     setIsPreloaderOpen(true);
+    resetErrors();
     api
       .authorize(email, password)
       .then(res => {
@@ -213,44 +215,24 @@ function App() {
   }
 
   // функция выхода из системы
-  // function handleUserLogOut() {
-  //   api.logOut();
-  //   resetErrors();
-  //   setIsLoggedIn(false);
-  //   setCurrentUser({});
-  //   setIsMobileMenuOpen(false);
-  //   setMoviesCards([]);
-  //   setSearchString('');
-  //   setFilteredShorts([]);
-  //   setFilterParameters({});
-  //   setSavedMovies([]);
-  //   localStorage.removeItem('movies');
-  //   localStorage.removeItem('filteredMovies');
-  //   localStorage.removeItem('filterParameters');
-  //   localStorage.removeItem('filteredShorts');
-  // }
-
   function handleUserLogOut() {
     setIsPreloaderOpen(true);
     api
       .logOut()
-      .then(() => {
-        resetErrors();
-        setIsLoggedIn(false);
+      .then(() => {        
         setCurrentUser({});
         setIsMobileMenuOpen(false);
         setMoviesCards([]);
         setSearchString('');
         setFilteredShorts([]);
         setFilterParameters({});
-        setSavedMovies([]);
-        localStorage.removeItem('movies');
-        localStorage.removeItem('filteredMovies');
-        localStorage.removeItem('filterParameters');
-        localStorage.removeItem('filteredShorts');
+        setSavedMovies([]);       
+        setIsLoggedIn(false);
+        resetErrors();
       })
-      .catch(err => {        
-        handleInfoTooltipOpen(toolMessages[toolMessage.err]);        
+      .catch(err => { 
+        navigate(location.pathname);       
+        setIsUserError({ error: toolMessages[toolMessage.err].text });        
       })
       .finally(() => {
         setIsPreloaderOpen(false);
@@ -261,6 +243,7 @@ function App() {
   function handleUpdateUser(name, email) {
     setIsUserSending(true);
     setIsPreloaderOpen(true);
+    resetErrors();
     api
       .editUserProfile(name, email)
       .then(userData => {
@@ -285,8 +268,7 @@ function App() {
   }
 
   // функция сохранения/удаления фильма из избранного
-  function handleLikeMovie(movie, likeMovieId = 0) {
-    resetErrors();
+  function handleLikeMovie(movie, likeMovieId = 0) {    
     if (likeMovieId) {
       handleDelteMovie(likeMovieId); // дизлайкаем == удаляем из сохраненных
     } else {
@@ -296,6 +278,7 @@ function App() {
 
   // функция добавления фильма
   function handleSaveMovie(movie) {
+    resetErrors();
     setIsPreloaderOpen(true);
     api
       .saveMovie(movie)
@@ -317,6 +300,7 @@ function App() {
 
   //функция удаления фильма
   function handleDelteMovie(likeMovie) {
+    resetErrors();
     setIsPreloaderOpen(true);
     api
       .deleteMovie(likeMovie)
@@ -351,6 +335,7 @@ function App() {
 
   // функция фильтрации фильмов
   function handleFilterMovies(e) {
+    resetErrors();
     if (e) {
       e.preventDefault();
       if (searchString === '') {
@@ -358,15 +343,24 @@ function App() {
         return;
       }
     }
-    const tempMovies = moviesAll.filter(
-      item =>
-        item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
-        item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
-    );
-    setMoviesCards(tempMovies);
-    const tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
-    setFilteredShorts(tempMoviesShort);
-    setFilterParameters({ ...filterParameters, search: searchString });
+
+    let tempMovies=[];
+    let tempMoviesShort=[];
+
+    if(moviesAll.length) {
+      tempMovies = moviesAll.filter(
+        (item) => {
+          try{
+            return item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
+            item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
+          }catch(e){ return false; }
+        }
+      );
+      setMoviesCards(tempMovies);
+      tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
+      setFilteredShorts(tempMoviesShort);
+      setFilterParameters({ ...filterParameters, search: searchString });
+    }
 
     if (
       e &&
@@ -423,6 +417,7 @@ function App() {
                       moviesCards={moviesCards}
                       filteredShorts={filteredShorts}
                       userError={isUserError}
+                      resetErrors={resetErrors}
                     />
                   }
                 />
@@ -441,6 +436,7 @@ function App() {
                       deleteMovie={handleDelteMovie}
                       tooltipOpen={handleInfoTooltipOpen}
                       userError={isUserError}
+                      resetErrors={resetErrors}
                     />
                   }
                 />

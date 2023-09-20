@@ -57,7 +57,7 @@
 }
 
 .login__nav {
-    padding-top: 195px;
+    padding-top: 166px;
     display: flex;
     flex-direction: column;
     row-gap: 17px;
@@ -99,6 +99,11 @@
 
 .login__register:hover {
     opacity: .7;
+}
+
+.login__error {
+    display: block;
+    min-height: 14px;
 }
 
 .regauto__error-visible {
@@ -167,8 +172,8 @@
     }
 
     .login__nav {
-        padding-top: 290px;
-        row-gap: 12px;
+        padding-top: 257px;
+        row-gap: 15px;
     }
 
     .login__text {
@@ -179,7 +184,7 @@
         font-size: 12px;
     }
 
-    .regauto__error_visible {
+    .regauto__error-visible {
         height: 23px;
     }
 }

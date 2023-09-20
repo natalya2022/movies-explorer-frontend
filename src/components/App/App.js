@@ -39,7 +39,7 @@ function App() {
   });
   const [searchString, setSearchString] = useState(filterParameters.search);
   const [filteredShorts, setFilteredShorts] = useLocalStorage('filteredShorts', []);
-  const [savedMovies, setSavedMovies] = useState([]);  
+  const [savedMovies, setSavedMovies] = useState([]);
   const [isPreloaderOpen, setIsPreloaderOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -54,26 +54,38 @@ function App() {
         .then(user => {
           setCurrentUser(user);
         })
-        .catch(console.error)
-        .finally(() => {        
+        .catch(err => {
+          console.error(err.status);
+          setIsUserError({ error: toolMessages[toolMessage.err].text });
+        })
+        .finally(() => {
           setIsPreloaderOpen(false);
-        });   
+        });
     } else {
       setCurrentUser({});
+      setIsPreloaderOpen(false);
     }
   }, [isLoggedIn]);
 
-  // загрузка фильмов с сервера beatfilm-movies
+  // загрузка фильмов с сервиса beatfilm-movies
   useEffect(() => {
     if (isLoggedIn) {
+      setIsPreloaderOpen(true);
       movies
         .getMovies()
         .then(movies => {
           setMoviesAll(movies);
         })
-        .catch(console.error);
+        .catch(err => {
+          console.error(err.status);
+          setIsUserError({ error: toolMessages[toolMessage.errLoading].text });
+        })
+        .finally(() => {
+          setIsPreloaderOpen(false);
+        });
     } else {
       setMoviesAll([]);
+      setIsPreloaderOpen(false);
     }
   }, [isLoggedIn, setMoviesAll]);
 
@@ -84,14 +96,18 @@ function App() {
       api
         .getMovies()
         .then(movies => {
-          setSavedMovies(movies);                   
+          setSavedMovies(movies);
         })
-        .catch(console.error)
-        .finally(() => {        
+        .catch(err => {
+          console.error(err.status);
+          setIsUserError({ error: toolMessages[toolMessage.errLoading].text });
+        })
+        .finally(() => {
           setIsPreloaderOpen(false);
-        });        
+        });
     } else {
       setSavedMovies([]);
+      setIsPreloaderOpen(false);
     }
   }, [isLoggedIn]);
 
@@ -131,6 +147,7 @@ function App() {
       .then(res => {
         setCurrentUser(res);
         handleUserLogin(res.email, password);
+        navigate('/movies');
       })
       .catch(err => {
         console.error(err.status);
@@ -196,20 +213,48 @@ function App() {
   }
 
   // функция выхода из системы
+  // function handleUserLogOut() {
+  //   api.logOut();
+  //   resetErrors();
+  //   setIsLoggedIn(false);
+  //   setCurrentUser({});
+  //   setIsMobileMenuOpen(false);
+  //   setMoviesCards([]);
+  //   setSearchString('');
+  //   setFilteredShorts([]);
+  //   setFilterParameters({});
+  //   setSavedMovies([]);
+  //   localStorage.removeItem('movies');
+  //   localStorage.removeItem('filteredMovies');
+  //   localStorage.removeItem('filterParameters');
+  //   localStorage.removeItem('filteredShorts');
+  // }
+
   function handleUserLogOut() {
-    api.logOut();
-    setIsLoggedIn(false);
-    setCurrentUser({});
-    setIsMobileMenuOpen(false);
-    setMoviesCards([]);
-    setSearchString('');
-    setFilteredShorts([false]);
-    setFilterParameters({});
-    setSavedMovies([]);
-    localStorage.removeItem('movies');
-    localStorage.removeItem('filteredMovies');
-    localStorage.removeItem('filterParameters');
-    localStorage.removeItem('filteredShorts');
+    setIsPreloaderOpen(true);
+    api
+      .logOut()
+      .then(() => {
+        resetErrors();
+        setIsLoggedIn(false);
+        setCurrentUser({});
+        setIsMobileMenuOpen(false);
+        setMoviesCards([]);
+        setSearchString('');
+        setFilteredShorts([]);
+        setFilterParameters({});
+        setSavedMovies([]);
+        localStorage.removeItem('movies');
+        localStorage.removeItem('filteredMovies');
+        localStorage.removeItem('filterParameters');
+        localStorage.removeItem('filteredShorts');
+      })
+      .catch(err => {        
+        handleInfoTooltipOpen(toolMessages[toolMessage.err]);        
+      })
+      .finally(() => {
+        setIsPreloaderOpen(false);
+      });
   }
 
   // функция изменения данных пользователя
@@ -241,7 +286,7 @@ function App() {
 
   // функция сохранения/удаления фильма из избранного
   function handleLikeMovie(movie, likeMovieId = 0) {
-    console.log(movie, likeMovieId);
+    resetErrors();
     if (likeMovieId) {
       handleDelteMovie(likeMovieId); // дизлайкаем == удаляем из сохраненных
     } else {
@@ -255,7 +300,7 @@ function App() {
     api
       .saveMovie(movie)
       .then(newMovie => {
-        setSavedMovies([...savedMovies, newMovie]);        
+        setSavedMovies([...savedMovies, newMovie]);
       })
       .catch(err => {
         console.error(err.status);
@@ -265,7 +310,7 @@ function App() {
           setIsUserError({ error: toolMessages[toolMessage.err].text });
         }
       })
-      .finally(() => {        
+      .finally(() => {
         setIsPreloaderOpen(false);
       });
   }
@@ -276,7 +321,7 @@ function App() {
     api
       .deleteMovie(likeMovie)
       .then(() => {
-        setSavedMovies(movies => movies.filter(c => c._id !== likeMovie));        
+        setSavedMovies(movies => movies.filter(c => c._id !== likeMovie));
       })
       .catch(err => {
         console.error(err.status);
@@ -286,7 +331,7 @@ function App() {
           setIsUserError({ error: toolMessages[toolMessage.err].text });
         }
       })
-      .finally(() => {        
+      .finally(() => {
         setIsPreloaderOpen(false);
       });
   }
@@ -295,11 +340,13 @@ function App() {
   function handleShortsToggle() {
     setFilterParameters({ ...filterParameters, shorts: !filterParameters.shorts });
     setFilteredShorts(moviesCards.filter(item => item.duration <= 40));
+    resetErrors();
   }
 
   // функция сохранения значения поисковой строки
   function searchChange(value) {
     setSearchString(value);
+    resetErrors();
   }
 
   // функция фильтрации фильмов
@@ -375,6 +422,7 @@ function App() {
                       savedMovies={savedMovies}
                       moviesCards={moviesCards}
                       filteredShorts={filteredShorts}
+                      userError={isUserError}
                     />
                   }
                 />
@@ -390,8 +438,9 @@ function App() {
                       toggleMenu={toggleMenu}
                       loggedIn={isLoggedIn}
                       savedMovies={savedMovies}
-                      deleteMovie={handleDelteMovie}                      
+                      deleteMovie={handleDelteMovie}
                       tooltipOpen={handleInfoTooltipOpen}
+                      userError={isUserError}
                     />
                   }
                 />
@@ -412,7 +461,7 @@ function App() {
                       userError={isUserError}
                       resetErrors={resetErrors}
                       editableProfile={isEditableProfile}
-                      editProfile={handleUserProfileEdit}                      
+                      editProfile={handleUserProfileEdit}
                     />
                   }
                 />

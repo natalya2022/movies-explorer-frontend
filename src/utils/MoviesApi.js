@@ -7,6 +7,7 @@ function checkRequest(res) {
   return Promise.reject(`Ошибка: ${res.status}`);
 }
 
+// загрузка фильмов
 export const getMovies = () => {
   return fetch(`${MOVIES_URL}/beatfilm-movies`, {
     method: 'GET',

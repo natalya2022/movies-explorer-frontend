@@ -59,6 +59,7 @@
 .search__border {
     width: 100%;
     border: 1px solid #E8E8E8;
+    margin-bottom: 5px;
 }
 
 @media screen and (max-width: 768px) {
@@ -96,7 +97,7 @@
 
 @media screen and (max-width: 420px) {
     .search {
-        padding: 79px 10px 10px 10px;
+        padding: 79px 10px 0px 10px;
     }
 
     .search__input {

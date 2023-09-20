@@ -8,7 +8,6 @@
     border-radius: 10px;
     background-color: white;
     position: relative;
-    /* box-shadow: drop-shadow(0px 16px 24px rgba(0, 0, 0, 0.05)); */
     box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.05);
 }
 
@@ -39,6 +38,7 @@
 }
 
 .movies-grid__title {
+    display: block;
     margin: 0 0 10px 0;
     font-size: 13px;
     font-style: normal;

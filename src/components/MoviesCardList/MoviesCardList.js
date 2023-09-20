@@ -5,9 +5,9 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { COUNT_FIRST, COUNT_ADD, countSelectorArray } from '../../utils/constants';
 
-const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) => {
+const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie, userError }) => {
   const [countMovies, setCountMovies] = useState(countSelector(COUNT_FIRST));
-
+  
   // навешивет слушатель, который при изменении разрешения
   // вызывает функцию пересчета кол-ва карточек
   // расчет содержится в массиве countSelectorArray
@@ -18,8 +18,6 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
     const handleResize = e => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
-        // const column = countSelector(COUNT_LINE);
-        // setCountMovies(Math.ceil(countMovies / column) * column);
         setCountMovies(countSelector(COUNT_FIRST));
       }, 10);
     };
@@ -33,7 +31,7 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
     return countSelectorArray.find(item => item[0] >= width)[first];
   }
 
-  // функция добавления карточек по кнопке
+  // функция добавления карточек по кнопке Еще
   function outputCount() {
     setCountMovies(countMovies + countSelector(COUNT_ADD));
   }
@@ -44,15 +42,20 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
     <section className="movies-grid" aria-label="Фотогалерея">
       {location.pathname === '/movies' ? (
         <>
+          <span className="movies-grid__error movies-grid__error_visible">
+            {userError.error || ''}
+          </span>
           <ul className="movies-grid__places">
-            {moviesCards.filter((_, index) => index < countMovies ).map(moviesCard => 
+            {moviesCards
+              .filter((_, index) => index < countMovies)
+              .map(moviesCard => (
                 <MoviesCard
                   moviesCard={moviesCard}
                   key={moviesCard.id}
                   likeMovie={likeMovie}
                   savedMovies={savedMovies}
                 />
-              )}
+              ))}
           </ul>
           <div className="movies-grid__more">
             {countMovies < moviesCards.length ? (
@@ -69,8 +72,11 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie }) =>
         </>
       ) : (
         <>
-          <ul className="movies-grid__places">
-            {moviesCards.map((moviesCard ) => {
+          <span className="movies-grid__error movies-grid__error_visible">
+            {userError.error || ''}
+          </span>
+          <ul className="movies-grid__places movies-grid__indent">
+            {moviesCards.map(moviesCard => {
               return (
                 <MoviesCard
                   key={moviesCard._id}

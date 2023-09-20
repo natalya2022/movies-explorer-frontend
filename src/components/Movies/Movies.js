@@ -15,7 +15,8 @@ const Movies = ({
   savedMovies,
   moviesCards,
   filteredShorts,
-  searchChange
+  searchChange,
+  userError,  
 }) => {
   return (
     <div className="page-wrap">
@@ -32,6 +33,7 @@ const Movies = ({
           moviesCards={!filterParameters.shorts ? moviesCards : filteredShorts}
           likeMovie={likeMovie}
           savedMovies={savedMovies}
+          userError={userError}                      
         />
       </main>
       <Footer />

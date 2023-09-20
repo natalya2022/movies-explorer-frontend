@@ -64,7 +64,7 @@ const Profile = ({
                 value={values.name || ''}
               />
             </div>
-            <span className="form-update-error regauto__error-visible">{errors.name || ''}</span>
+            <span className="profile__input-error profile__input-error_visible profile__input-error_border">{errors.name || ''}</span>
             <div className="profile__fill">
               <label className="profile__label" htmlFor="form-update-email">
                 E-mail
@@ -82,7 +82,7 @@ const Profile = ({
                 value={values.email || ''}
               />
             </div>
-            <span className="form-update-error regauto__error-visible">{errors.email || ''}</span>
+            <span className="profile__input-error profile__input-error_visible ">{errors.email || ''}</span>
             <div className="profile__nav">
               <span className="profile__error profile__error_visible">{userError.error || ''}</span>
               {!editableProfile ? (

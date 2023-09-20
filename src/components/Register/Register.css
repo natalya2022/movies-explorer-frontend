@@ -57,11 +57,16 @@
 }
 
 .register__nav {
-    padding-top: 128px;
+    padding-top: 100px;
     display: flex;
     flex-direction: column;
     row-gap: 17px;
     align-items: center;
+}
+
+.register__error {
+    display: block;
+    min-height: 14px;
 }
 
 .register__error_visible {
@@ -167,7 +172,7 @@
     }
 
     .register__nav {
-        padding-top: 217px;
+        padding-top: 192px;
     }
 
     .register__text {
@@ -182,7 +187,7 @@
         row-gap: 14px;
     }
 
-    .regauto__error_visible {
+    .regauto__error-visible {
         height: 23px;
     }
 }

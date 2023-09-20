@@ -3,8 +3,7 @@ import { MOVIES_URL, BASE_URL } from './constants';
 async function checkRequest(res) {
   if (res.ok) {
     return res.json();
-  }
-  // return Promise.reject(`Ошибка: ${res.status}. ${(await res.json()).message }`);
+  }  
   return Promise.reject({
     status: `Ошибка: ${res.status}`,
     message: `${(await res.json()).message}`
@@ -89,6 +88,7 @@ export const editUserProfile = ({ name, email }) => {
   }).then(res => checkRequest(res));
 };
 
+// сохранение фильма
 export const saveMovie = movie => {
   return fetch(`${BASE_URL}/movies`, {
     method: 'POST',
@@ -113,6 +113,7 @@ export const saveMovie = movie => {
   }).then(res => checkRequest(res));
 };
 
+// удаление фильма
 export const deleteMovie = movieId => {
   return fetch(`${BASE_URL}/movies/${movieId}`, {
     method: 'DELETE',
@@ -124,6 +125,7 @@ export const deleteMovie = movieId => {
   });
 };
 
+// загрузка сохраненных фильмов
 export const getMovies = () => {
   return fetch(`${BASE_URL}/movies`, {
     method: 'GET',

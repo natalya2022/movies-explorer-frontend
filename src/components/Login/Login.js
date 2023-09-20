@@ -52,7 +52,7 @@ const Login = ({ onUserLogin, isSending, userError, resetErrors }) => {
             </label>
             <input
               type="password"
-              className={`login__email login__input ${errors.email ? 'login__input_error' : ''}`}
+              className={`login__email login__input ${errors.password ? 'login__input_error' : ''}`}
               id="form-login-pass"
               size="10"
               required

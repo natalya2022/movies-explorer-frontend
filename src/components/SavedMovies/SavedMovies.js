@@ -6,11 +6,20 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { toolMessage, toolMessages } from '../../utils/constants';
 
-const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave, tooltipOpen }) => {
+const SavedMovies = ({
+  toggleMenu,
+  loggedIn,
+  savedMovies,
+  deleteMovie,
+  tooltipOpen,
+  userError
+}) => {
   const [filterShorts, setFilterShorts] = useState([]);
   const [searchString, setSearchString] = useState('');
   const [filteredMovies, setFilteredMovies] = useState(savedMovies);
   const [checkBoxParameters, setCheckBoxParameters] = useState(false);
+
+console.log(userError);
 
   // обновляет выдачу фильмов при обновлении страницы
   useEffect(() => {
@@ -21,7 +30,7 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave,
 
   // функция перeключения короткометражек для избранного
   function handleShortsToggle() {
-    setCheckBoxParameters(!checkBoxParameters);   
+    setCheckBoxParameters(!checkBoxParameters);
   }
 
   // функция сохранения значения поисковой строки для избранного
@@ -31,13 +40,14 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave,
 
   // функция фильтрации фильмов избранного
   function handleFilterMovies(e) {
-    if(e){
+    if (e) {
       e.preventDefault();
-      if (searchString === '') {
+      if (searchString === '' && savedMovies.length > 0) {
         tooltipOpen(toolMessages[toolMessage.search]);
         return;
       }
     }
+
     const tempMovies = savedMovies.filter(
       item =>
         item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
@@ -45,10 +55,14 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave,
     );
     setFilteredMovies(tempMovies);
     const tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
-    setFilterShorts(tempMoviesShort);    
+    setFilterShorts(tempMoviesShort);
 
-    if(e && (tempMovies.length===0 || (checkBoxParameters && tempMoviesShort.length===0))){
+    if (e && (tempMovies.length === 0 || (checkBoxParameters && tempMoviesShort.length === 0))) {
       tooltipOpen(toolMessages[toolMessage.noresult]);
+    }
+    
+    if (e && savedMovies.length === 0) {
+      tooltipOpen(toolMessages[toolMessage.empty]);
     }
   }
 
@@ -67,6 +81,7 @@ const SavedMovies = ({ toggleMenu, loggedIn, savedMovies, deleteMovie, flagSave,
           savedMovies={savedMovies}
           deleteMovie={deleteMovie}
           moviesCards={!checkBoxParameters ? filteredMovies : filterShorts}
+          userError={userError}
         />
       </main>
       <Footer />

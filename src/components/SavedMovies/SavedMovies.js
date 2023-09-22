@@ -5,6 +5,7 @@ import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { toolMessage, toolMessages } from '../../utils/constants';
+import { SHORTS_DURATION } from '../../utils/constants';
 
 const SavedMovies = ({
   toggleMenu,
@@ -18,7 +19,7 @@ const SavedMovies = ({
   const [filterShorts, setFilterShorts] = useState([]);
   const [searchString, setSearchString] = useState('');
   const [filteredMovies, setFilteredMovies] = useState(savedMovies);
-  const [checkBoxParameters, setCheckBoxParameters] = useState(false);
+  const [checkBoxParameters, setCheckBoxParameters] = useState(false);  
 
   useEffect(() => {
     resetErrors();
@@ -44,7 +45,7 @@ const SavedMovies = ({
   // функция фильтрации фильмов избранного
   function handleFilterMovies(e) {
     if (e) {
-      e.preventDefault();
+      e.preventDefault();      
       if (searchString === '' && savedMovies.length > 0) {
         tooltipOpen(toolMessages[toolMessage.search]);
         return;
@@ -57,7 +58,7 @@ const SavedMovies = ({
         item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
     );
     setFilteredMovies(tempMovies);
-    const tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
+    const tempMoviesShort = tempMovies.filter(item => item.duration <= SHORTS_DURATION);
     setFilterShorts(tempMoviesShort);
 
     if (e && (tempMovies.length === 0 || (checkBoxParameters && tempMoviesShort.length === 0))) {
@@ -84,7 +85,7 @@ const SavedMovies = ({
           savedMovies={savedMovies}
           deleteMovie={deleteMovie}
           moviesCards={!checkBoxParameters ? filteredMovies : filterShorts}
-          userError={userError}
+          userError={userError}         
         />
       </main>
       <Footer />

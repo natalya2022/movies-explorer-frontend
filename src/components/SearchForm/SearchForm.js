@@ -19,7 +19,7 @@ const SearchForm = ({ filterShorts, toggleShorts, filterMovies, searchChange, se
               autoFocus
               size="10"
               onChange={e => searchChange(e.target.value)}
-              value={searchString}
+              value={searchString || ''}
             />
             <ButtonUniversal className={'button-search'} type={'submit'} onClick={filterMovies} />
           </div>

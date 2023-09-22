@@ -5,9 +5,17 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import ButtonUniversal from '../ButtonUniversal/ButtonUniversal';
 import { COUNT_FIRST, COUNT_ADD, countSelectorArray } from '../../utils/constants';
 
-const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie, userError }) => {
+const MoviesCardList = ({
+  moviesCards,
+  likeMovie,
+  savedMovies,
+  deleteMovie,
+  userError,
+  toggleMoviesRender,
+  renderMovies
+}) => {
   const [countMovies, setCountMovies] = useState(countSelector(COUNT_FIRST));
-  
+
   // навешивет слушатель, который при изменении разрешения
   // вызывает функцию пересчета кол-ва карточек
   // расчет содержится в массиве countSelectorArray
@@ -30,6 +38,13 @@ const MoviesCardList = ({ moviesCards, likeMovie, savedMovies, deleteMovie, user
   function countSelector(first, width = window.innerWidth) {
     return countSelectorArray.find(item => item[0] >= width)[first];
   }
+
+  useEffect(() => {
+    if (renderMovies) {
+      setCountMovies(countSelector(COUNT_FIRST));
+      renderMovies && toggleMoviesRender();
+    }
+  }, [renderMovies]);
 
   // функция добавления карточек по кнопке Еще
   function outputCount() {

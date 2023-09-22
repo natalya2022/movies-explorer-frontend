@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
 import './../../index.css';
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import useLocalStorage from 'use-local-storage';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
@@ -18,6 +19,7 @@ import * as movies from '../../utils/MoviesApi.js';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { toolMessage, toolMessages, serverErrors } from '../../utils/constants';
 import Preloader from '../Preloader/Preloader';
+import { SHORTS_DURATION } from '../../utils/constants';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -41,6 +43,8 @@ function App() {
   const [filteredShorts, setFilteredShorts] = useLocalStorage('filteredShorts', []);
   const [savedMovies, setSavedMovies] = useState([]);
   const [isPreloaderOpen, setIsPreloaderOpen] = useState(false);
+  const [isRenderMovies, setIsRenderMovies] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -69,7 +73,7 @@ function App() {
 
   // загрузка фильмов с сервиса beatfilm-movies
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoading) {
       setIsPreloaderOpen(true);
       movies
         .getMovies()
@@ -81,13 +85,17 @@ function App() {
           setIsUserError({ error: toolMessages[toolMessage.errLoading].text });
         })
         .finally(() => {
+          setIsLoading(false);
           setIsPreloaderOpen(false);
-        });
-    } else {
-      setMoviesAll([]);
-      setIsPreloaderOpen(false);
+        });    
     }
-  }, [isLoggedIn, setMoviesAll]);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (moviesAll) {
+      handleFilterMovies();
+    }
+  }, [moviesAll]);
 
   // загрузка сохраненных фильмов
   useEffect(() => {
@@ -219,20 +227,21 @@ function App() {
     setIsPreloaderOpen(true);
     api
       .logOut()
-      .then(() => {        
+      .then(() => {
         setCurrentUser({});
         setIsMobileMenuOpen(false);
         setMoviesCards([]);
         setSearchString('');
         setFilteredShorts([]);
         setFilterParameters({});
-        setSavedMovies([]);       
+        setSavedMovies([]);
         setIsLoggedIn(false);
         resetErrors();
+        setMoviesAll([]);
       })
-      .catch(err => { 
-        navigate(location.pathname);       
-        setIsUserError({ error: toolMessages[toolMessage.err].text });        
+      .catch(err => {
+        navigate(location.pathname);
+        setIsUserError({ error: toolMessages[toolMessage.err].text });
       })
       .finally(() => {
         setIsPreloaderOpen(false);
@@ -268,7 +277,7 @@ function App() {
   }
 
   // функция сохранения/удаления фильма из избранного
-  function handleLikeMovie(movie, likeMovieId = 0) {    
+  function handleLikeMovie(movie, likeMovieId = 0) {
     if (likeMovieId) {
       handleDelteMovie(likeMovieId); // дизлайкаем == удаляем из сохраненных
     } else {
@@ -323,7 +332,7 @@ function App() {
   // функция перeключения короткометражек
   function handleShortsToggle() {
     setFilterParameters({ ...filterParameters, shorts: !filterParameters.shorts });
-    setFilteredShorts(moviesCards.filter(item => item.duration <= 40));
+    setFilteredShorts(moviesCards.filter(item => item.duration <= SHORTS_DURATION));
     resetErrors();
   }
 
@@ -333,40 +342,49 @@ function App() {
     resetErrors();
   }
 
+  // функция сброса количества карт при рендере
+  function toggleMoviesRender() {
+    setIsRenderMovies(false);
+  }
+
   // функция фильтрации фильмов
   function handleFilterMovies(e) {
     resetErrors();
     if (e) {
       e.preventDefault();
+      setIsRenderMovies(true);
+      if (moviesAll.length === 0) {
+        setIsLoading(true);
+      }
       if (searchString === '') {
         handleInfoTooltipOpen(toolMessages[toolMessage.search]);
         return;
       }
-    }
-
-    let tempMovies=[];
-    let tempMoviesShort=[];
-
-    if(moviesAll.length) {
-      tempMovies = moviesAll.filter(
-        (item) => {
-          try{
-            return item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
+    }    
+    let tempMovies = [];
+    let tempMoviesShort = [];
+    if (moviesAll.length) {
+      tempMovies = moviesAll.filter(item => {
+        try {
+          return (
+            item.nameRU.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
             item.nameEN.toLowerCase().indexOf(searchString.toLowerCase()) !== -1
-          }catch(e){ return false; }
+          );
+        } catch (e) {
+          return false;
         }
-      );
+      });
       setMoviesCards(tempMovies);
-      tempMoviesShort = tempMovies.filter(item => item.duration <= 40);
+      tempMoviesShort = tempMovies.filter(item => item.duration <= SHORTS_DURATION);
       setFilteredShorts(tempMoviesShort);
       setFilterParameters({ ...filterParameters, search: searchString });
     }
-
     if (
       e &&
+      moviesAll.length !== 0 &&
       (tempMovies.length === 0 || (filterParameters.shorts && tempMoviesShort.length === 0))
     ) {
-      handleInfoTooltipOpen(toolMessages[toolMessage.noresult]);
+      moviesAll.length && handleInfoTooltipOpen(toolMessages[toolMessage.noresult]);
     }
   }
 
@@ -379,23 +397,31 @@ function App() {
             <Route
               path="/signup"
               element={
-                <Register
-                  onAddUser={handleNewUserReg}
-                  isSending={isRegisterSending}
-                  userError={isUserError}
-                  resetErrors={resetErrors}
-                />
+                isLoggedIn ? (
+                  <Navigate to="/movies" replace={true} />
+                ) : (
+                  <Register
+                    onAddUser={handleNewUserReg}
+                    isSending={isRegisterSending}
+                    userError={isUserError}
+                    resetErrors={resetErrors}
+                  />
+                )
               }
             />
             <Route
               path="/signin"
               element={
-                <Login
-                  onUserLogin={handleUserLogin}
-                  isSending={isLoginSending}
-                  userError={isUserError}
-                  resetErrors={resetErrors}
-                />
+                isLoggedIn ? (
+                  <Navigate to="/movies" replace={true} />
+                ) : (
+                  <Login
+                    onUserLogin={handleUserLogin}
+                    isSending={isLoginSending}
+                    userError={isUserError}
+                    resetErrors={resetErrors}
+                  />
+                )
               }
             />
             <Route
@@ -418,6 +444,8 @@ function App() {
                       filteredShorts={filteredShorts}
                       userError={isUserError}
                       resetErrors={resetErrors}
+                      toggleMoviesRender={toggleMoviesRender}
+                      renderMovies={isRenderMovies}
                     />
                   }
                 />

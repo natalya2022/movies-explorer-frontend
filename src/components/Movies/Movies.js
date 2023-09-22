@@ -17,12 +17,14 @@ const Movies = ({
   filteredShorts,
   searchChange,
   userError,
-  resetErrors
+  resetErrors,
+  toggleMoviesRender,
+  renderMovies
 }) => {
   
   useEffect(() => {
     resetErrors();
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -41,6 +43,8 @@ const Movies = ({
           likeMovie={likeMovie}
           savedMovies={savedMovies}
           userError={userError}
+          toggleMoviesRender={toggleMoviesRender}
+          renderMovies={renderMovies}
         />
       </main>
       <Footer />

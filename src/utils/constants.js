@@ -40,3 +40,5 @@ export const serverErrors = [
   'Неверный email или пароль',
   'На сервере произошла ошибка'
 ];
+
+export const SHORTS_DURATION = 40;

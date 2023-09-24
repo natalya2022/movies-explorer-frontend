@@ -14,7 +14,7 @@
 }
 
 .register__fill {
-    margin-top: 24px;
+    /* margin-top: 24px; */
     display: flex;
     flex-direction: column;
     row-gap: 4px;
@@ -31,7 +31,7 @@
 .register__input {
     width: 100%;
     margin: 0;
-    padding: 0 0 11px 0;
+    padding: 0 0 10px 0;
     border: none;
     font-size: 14px;
     font-style: normal;
@@ -47,16 +47,37 @@
     border-bottom: 1px solid #3456F3;
 }
 
-/* .register__input:invalid {
+.register__input_error.register__input:focus {
+    border-bottom: 1px solid #EE3465;
     color: #EE3465;
-} */
+}
+
+.register__input_error {
+    color: #EE3465;
+}
 
 .register__nav {
-    padding-top: 152px;
+    padding-top: 100px;
     display: flex;
     flex-direction: column;
     row-gap: 17px;
     align-items: center;
+}
+
+.register__error {
+    display: block;
+    min-height: 14px;
+}
+
+.register__error_visible {
+    color: #FF004C;
+    text-align: center;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: auto;
+    padding: 0;
 }
 
 .register__text {
@@ -85,6 +106,48 @@
     opacity: .7;
 }
 
+.regauto__error-visible {
+    color: #EE3465;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    display: inline-block;
+    height: 20px;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+}
+
+.register__button {
+    display: block;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    color: #FFF;
+    background: #3456F3;
+    border-radius: 3px;
+    width: 100%;
+    height: 45px;
+    transition: opacity 0.3s;
+}
+
+.register__button:hover {
+    opacity: .8;
+}
+
+.register__button_disabled {
+    background: #F8F8F8;
+    color: #C2C2C2;
+}
+
 @media screen and (max-width: 768px) {
     .register {
         padding: 232px 0 232px 0;
@@ -105,11 +168,11 @@
     }
 
     .register__title {
-        margin: 50px 0 55px 0;
+        margin: 50px 0 80px 0;
     }
 
     .register__nav {
-        padding-top: 241px;
+        padding-top: 192px;
     }
 
     .register__text {
@@ -122,5 +185,15 @@
 
     .register__nav {
         row-gap: 14px;
+    }
+
+    .regauto__error-visible {
+        height: 23px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .button-reg-login {
+        font-size: 12px;
     }
 }

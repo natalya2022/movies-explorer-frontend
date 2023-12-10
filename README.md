@@ -7,3 +7,6 @@
 #### IP 51.250.8.232
 Frontend https://movieinfo.nomoredomainsicu.ru Backend https://api.movieinfo.nomoredomainsicu.ru
 Ссылка на проект: https://movieinfo.nomoredomainsicu.ru/
+#### Стек (frontend, backend): React.js, HTML5, CSS3, JavaScript, Node.js, Express.js, MongoDB, Mongoose, CORS, адаптивная верстка.
+
+#### Проект завершен

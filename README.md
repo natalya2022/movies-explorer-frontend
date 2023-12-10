@@ -1,9 +1,9 @@
-вариант макета light-3
+### Проект "Movieinfo"
 
-Ссылка на PR
-https://github.com/natalya2022/movies-explorer-frontend/pull/2
+Фронтенд проекта "Movieinfo", представляющего собой приложение для поиска и просмотра фильмов. Приложение позволяет подключаться к стороннему сервису фильмов, загружать каталог фильмов, работать с ним, производить поиск по параметрам, и в последствии формировать избранное в личном кабинете пользователя. Реализованы бэкенд и фронтенд проекта.
 
-Ссылка на проект
-https://movieinfo.nomoredomainsicu.ru/
+#### Стек (frontend, backend): React.js, HTML5, CSS3, JavaScript, Node.js, Express.js, MongoDB, Mongoose, CORS, адаптивная верстка.
 
-https://github.com/natalya2022/movies-explorer-frontend/tree/level-3
+#### IP 51.250.8.232
+Frontend https://movieinfo.nomoredomainsicu.ru Backend https://api.movieinfo.nomoredomainsicu.ru
+Ссылка на проект: https://movieinfo.nomoredomainsicu.ru/
